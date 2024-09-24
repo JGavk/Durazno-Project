@@ -1,0 +1,160 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-image: url('/Fondo-login.avif'); /* Ruta de la imagen de fondo con las mascotas */
+  background-size: cover;
+  background-position: center;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  position: relative;
+}
+
+.login-card {
+  background-color: #bf592b;
+  padding: 2rem;
+  border-radius: 10px;
+  width: 350px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  color: white;
+  position: relative;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: white;
+  margin-bottom: 1.2rem; /* Espacio entre el h1 y el formulario */
+}
+
+/* Añadimos el logo desde la URL en CSS */
+.logo {
+  width: 500px;
+  height: 380px;
+  background-image: url('/Logo-Login.png'); /* Ruta de la imagen del logo */
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: absolute; /* Posicionamiento absoluto */
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.logo-login {
+  top: -56%; /* Ajusta el valor según sea necesario */
+}
+
+/* Estilo específico para el formulario de Registro */
+.logo-signup {
+  top: -32%; /* Ajusta el valor según sea necesario para el formulario de registro */
+}
+
+.logo-verification {
+  top: -50%; /* Ajusta según el diseño que necesites para el formulario de verificación */
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  z-index: 2; 
+}
+
+.form-signup {
+  position: relative;
+  top: 40px; /* Ajusta este valor según cuánto lo quieras bajar */
+  left: 50%; /* Esto mantiene el centrado horizontal */
+  transform: translateX(-50%); /* Esto asegura que el centrado horizontal se mantenga */
+}
+
+.form-verification {
+  position: relative;
+  top: 50px; /* Ajusta este valor para mover el formulario */
+  left: 50%; /* Centrado horizontal */
+  transform: translateX(-50%);
+}
+
+.title-signup {
+  position: relative;
+  top: 50px; /* Ajusta este valor según lo que necesites */
+}
+
+label {
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+input {
+  padding: 10px;
+  border-radius: 30px; /* Bordes circulares */
+  border: 2px solid #edbea4; /* Borde del input */
+  background-color: #edbea4; /* Color de fondo del input */
+  color: black; /* Texto en negro */
+  margin-bottom: 1rem;
+  font-size: 1rem;
+}
+
+button {
+  background-color: #edbea4; /* Color de fondo del botón */
+  color: white; /* Texto en blanco */
+  padding: 10px;
+  border: none;
+  border-radius: 30px; /* Bordes circulares */
+  cursor: pointer;
+  font-size: 1rem;
+  margin-top: 1rem;
+}
+
+button:hover {
+  background-color: #e17b34;
+}
+
+.forgot-password {
+  color: white;
+  text-decoration: none;
+  margin-bottom: 1rem;
+  font-size: 0.8rem;
+}
+
+.login-text {
+  text-align: center;
+  margin-top: 1.5rem; /* Ajusta el margen superior según sea necesario */
+  color: white; /* Color específico para login */
+  font-size: 1rem; /* Ajusta el tamaño de fuente */
+}
+
+.login-text a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.signup-text {
+  text-align: center;
+  margin-top: 4.2rem; /* Aumenta el margen superior para darle más espacio */
+}
+
+.signup-text a {
+  color: white;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+
