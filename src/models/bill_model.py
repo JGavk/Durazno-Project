@@ -9,3 +9,4 @@ class Bill(models.Model):
     canine = models.ForeignKey(Canine, on_delete=models.CASCADE, default=0)
     #value = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
+#

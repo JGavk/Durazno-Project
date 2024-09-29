@@ -8,3 +8,4 @@ class Adviser(models.Model):
     password = models.CharField(max_length=100)
     active = models.BooleanField(default=True)
 
+#
