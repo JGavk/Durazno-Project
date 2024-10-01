@@ -2,11 +2,11 @@ from django.db import models
 
 
 class User(models.Model):
-    picture = models.ImageField(upload_to="pictures", default="default.jpg")
+    picture = models.ImageField(upload_to="pictures", default=None)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
-    password = models.CharField(max_length=50)
+    password = models.CharField(max_length=250)
     is_active = models.BooleanField(default=True)
 
     #is_admin = models.BooleanField(default=False)
@@ -15,3 +15,6 @@ class User(models.Model):
     def set_password(self, password):
         from django.contrib.auth.hashers import make_password
         self.password = make_password(password)
+
+    class Meta:
+        db_table = 'user'

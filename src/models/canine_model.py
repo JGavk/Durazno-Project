@@ -13,4 +13,7 @@ class Canine(models.Model):
     color = models.CharField(max_length=100)
     vaccines = models.BooleanField(default=False)
     price = models.DecimalField(max_digits=5, decimal_places=2, default=0)
+
+    class Meta:
+        db_table = 'canine'
 #

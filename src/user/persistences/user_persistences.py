@@ -15,8 +15,8 @@ class UserPersistence:
                         is_active=is_active
                         )
             user.set_password(password)
-            user.save()
-            return user
+            inserted_user = user.save()
+            return inserted_user
         except Exception as e:
             return e
 
