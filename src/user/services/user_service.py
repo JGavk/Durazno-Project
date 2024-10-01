@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from ..persistences import UserPersistence
+from src.user.persistences import UserPersistence
 from django.views.decorators.csrf import csrf_exempt
 
 
@@ -28,3 +28,4 @@ def user_register(request):
             address
         )
 
+        return JsonResponse({'message': 'User created successfully', 'user.id': user.id}, status=201)
