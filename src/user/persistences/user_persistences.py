@@ -1,5 +1,6 @@
 from django.core.exceptions import ObjectDoesNotExist
 from src.models import User
+from django.forms.models import model_to_dict
 
 
 class UserPersistence:
@@ -9,9 +10,9 @@ class UserPersistence:
         try:
             user = User(picture=picture,
                         email=email,
-                        password=password,
                         phone=phone,
                         address=address,
+                        password=password,
                         is_active=is_active
                         )
             user.set_password(password)
@@ -23,8 +24,18 @@ class UserPersistence:
     @staticmethod
     def search_user(email):
         try:
-            return User.objects.get(email=email)
+            user = User.objects.get(email=email)
+            serialized_user = model_to_dict(user)
+            return serialized_user
         except ObjectDoesNotExist:
             return None
+        except Exception as e:
+            return e
+
+    #User update method implementation in progress
+    @staticmethod
+    def update_user(picture, email, phone, address, password, is_active=True):
+        try:
+            print("wathever")
         except Exception as e:
             return e

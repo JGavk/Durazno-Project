@@ -2,7 +2,7 @@ from django.db import models
 
 
 class User(models.Model):
-    picture = models.ImageField(upload_to="pictures", default=None)
+    picture = models.CharField(default=None)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     address = models.CharField(max_length=50)
