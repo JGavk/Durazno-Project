@@ -34,8 +34,33 @@ class UserPersistence:
 
     #User update method implementation in progress
     @staticmethod
-    def update_user(picture, email, phone, address, password, is_active=True):
+    def update_user(picture, email, phone, address, password):
         try:
-            print("wathever")
+            user = User.objects.get(email=email)
+            if picture:
+                user.picture = picture
+            if phone:
+                user.phone = phone
+            if address:
+                user.address = address
+            if password:
+                user.set_password(password)
+            user.save()
+
+            return user
+
+        except User.DoesNotExist:
+            return "User not found"
         except Exception as e:
-            return e
+            return str(e)
+
+    @staticmethod
+    def delete_user(email):
+        try:
+            user = User.objects.get(email=email)
+            user.delete()
+            return "User deleted"
+        except User.DoesNotExist:
+            return "User not found"
+        except Exception as e:
+            return str(e)
