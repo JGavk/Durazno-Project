@@ -1,7 +1,6 @@
 from django.http import JsonResponse
 from src.user.persistences import UserPersistence
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
 from django.contrib.auth.decorators import login_required
 
 
@@ -90,3 +89,5 @@ def delete_user(request):
 
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
+
+

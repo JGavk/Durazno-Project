@@ -7,5 +7,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/register', user_register, name='user_register'),
     path('user/up', update_user, name='update_user'),
-    path('user/del', delete_user, name='update_user'),
+    path('user/del', delete_user, name='delete_user'),
 ]
