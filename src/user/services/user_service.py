@@ -2,7 +2,10 @@ from django.http import JsonResponse
 from src.user.persistences import UserPersistence
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import authenticate, login
+from django.utils import timezone
 
+user_persistence = UserPersistence()
 
 @api_view(['POST'])
 def user_register(request):
@@ -13,11 +16,9 @@ def user_register(request):
         phone = data.get('phone')
         address = data.get('address')
         password = data.get('password')
-        print("HERE")
         if not email or not password:
             return JsonResponse({'error': 'Email and password are required.'}, status=400)
 
-        user_persistence = UserPersistence()
         exists = user_persistence.search_user(email)
         if exists:
             return JsonResponse({'error': 'User already exists.'}, status=400)
@@ -52,7 +53,6 @@ def update_user(request):
         address = data.get('address', None)
         password = data.get('password', None)
 
-        user_persistence = UserPersistence()
         update_result = user_persistence.update_user(
             picture=picture,
             email=user.email,
@@ -77,7 +77,6 @@ def delete_user(request):
         if not email:
             return JsonResponse({'status': 'fail', 'message': 'Email is required.'}, status=400)
 
-        user_persistence = UserPersistence()
         result = user_persistence.delete_user(email)
 
         if result == "User deleted":
@@ -91,3 +90,24 @@ def delete_user(request):
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
 
+@api_view(['POST'])
+def user_login(request):
+    try:
+        data = request.data
+        email = data.get('email')
+        password = data.get('password')
+
+        if not email or not password:
+            return JsonResponse({'error': 'Email and password are required.'}, status=400)
+
+        user = user_persistence.login_user(email, password)
+
+        if user:
+            login(request, user)
+            user.last_login = timezone.now()
+            return JsonResponse({'status': 'ok', 'message': 'User logged in.'}, status=200)
+        else:
+            return JsonResponse({'status': 'fail', 'message': 'Invalid credentials.'}, status=401)
+
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)

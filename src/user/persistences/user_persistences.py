@@ -64,3 +64,12 @@ class UserPersistence:
             return "User not found"
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def login_user(email, password):
+        try:
+            user = User.objects.get(email=email)
+            if user.check_password(password):
+                return user
+        except User.DoesNotExist:
+            return "User not found"
