@@ -1,0 +1,19 @@
+# Ignore the pyvenv directory
+pyvenv/
+
+# Ignore SQLite database files
+*.sqlite3
+
+# Ignorar la carpeta __pycache__
+__pycache__/
+**/__pycache__/
+**/__pycache__/*
+
+# Ignorar archivos .pyc
+*.pyc
+
+# Ignore media files
+media/
+
+# Ignore static files
+staticfiles/
