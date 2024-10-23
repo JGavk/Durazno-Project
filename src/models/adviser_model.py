@@ -13,11 +13,14 @@ class Adviser(models.Model):
 
     def set_password(self, password):
         self.password = make_password(password)
+        self.save()
 
     def check_password(self, password):
         return check_password(password, self.password)
 
     class Meta:
         db_table = 'adviser'
-
+        
+    def __str__(self):
+        return f'Adviser: {self.name}'
 #-
