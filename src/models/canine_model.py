@@ -5,7 +5,6 @@ from src.models import Adviser
 class Canine(models.Model):
     adviser = models.ForeignKey(Adviser, on_delete=models.CASCADE, default=0)
     picture = models.ImageField(upload_to=None)
-    name = models.CharField(max_length=100)
     age = models.IntegerField()
     race = models.CharField(max_length=100)
     pedigree = models.CharField(max_length=100)
