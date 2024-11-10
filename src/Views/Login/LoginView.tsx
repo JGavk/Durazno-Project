@@ -2,9 +2,9 @@
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
 import { useState } from 'react';
-import './App.css';
+import './LoginView.css';
 
-function App() {
+function LoginView() {
   const [isLogin, setIsLogin] = useState(true); // Estado para alternar entre login y registro
   const [showVerification, setShowVerification] = useState(false); // Estado para mostrar la verificación
   const [verificationCode, setVerificationCode] = useState(''); // Estado para el código de verificación
@@ -113,4 +113,4 @@ function App() {
   );
 }
 
-export default App;
+export default LoginView;
