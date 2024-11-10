@@ -12,6 +12,7 @@ def user_register(request):
     try:
         data = request.data
         picture = data.get('picture')
+        username = data.get('username')
         email = data.get('email')
         phone = data.get('phone')
         address = data.get('address')
@@ -25,6 +26,7 @@ def user_register(request):
 
         n_user = user_persistence.create_user(
             picture,
+            username,
             email,
             phone,
             address,

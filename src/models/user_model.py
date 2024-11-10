@@ -5,6 +5,7 @@ from django.utils import timezone
 
 class User(models.Model):
     picture = models.CharField(default=None)
+    username = models.CharField(max_length=15)
     email = models.CharField(max_length=50)
     phone = models.CharField(max_length=50)
     address = models.CharField(max_length=50)

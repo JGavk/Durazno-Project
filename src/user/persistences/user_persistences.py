@@ -5,10 +5,11 @@ from django.forms.models import model_to_dict
 
 class UserPersistence:
     @staticmethod
-    def create_user(picture, email, phone, address, password, is_active=True):
+    def create_user(picture, username, email, phone, address, password, is_active=True):
 
         try:
             user = User(picture=picture,
+                        username=username,
                         email=email,
                         phone=phone,
                         address=address,
