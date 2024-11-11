@@ -1,15 +1,14 @@
-/* Contenedor principal */
 .landing-container {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centra el contenido horizontalmente */
-    justify-content: center; /* Centra el contenido verticalmente */
+    align-items: center; 
+    justify-content: center; 
     height: 100vh;
     padding: 20px;
     font-family: 'Poppins', sans-serif;
 }
 
-/* Menú superior */
+
 .menu-bar {
     position: fixed;
     top: 0;
@@ -19,10 +18,10 @@
     justify-content: center;
     gap: 1rem; 
     padding: 1rem 0;
-    z-index: 1000; /* Asegura que el menú esté encima del resto del contenido */
+    z-index: 1000; 
 }
 
-/* Botones del menú */
+
 .menu-bar button {
     font-weight: bold;
     color: black;
@@ -33,10 +32,10 @@
 }
 
 .menu-bar .active {
-    color: #F75E25; /* Mismo color que el título 'Durazno' */
+    color: #F75E25; 
 }
 
-/* Sección de contenido */
+
 .scroll-content {
     max-width: 800px;
     text-align: center;
@@ -46,7 +45,7 @@
 
 .scroll-content h1 {
     font-size: 36px;
-    color: #F75E25;  /* Color del título 'Durazno' */
+    color: #F75E25;  
 }
 
 .scroll-content p {
@@ -55,7 +54,7 @@
     color: #333;
 }
 
-/* Botón de registro */
+
 .register-button {
     margin-top: 30px;
     padding: 10px 20px;

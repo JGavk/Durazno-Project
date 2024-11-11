@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './LandingPage.css';
-import LoginView from '../Login/LoginView'; // Ajusta la ruta e importación al componente correcto
+import LoginView from '../Login/LoginView';
 
 const LandingPage: React.FC = () => {
     const [activeSection, setActiveSection] = useState('quienes-somos');
