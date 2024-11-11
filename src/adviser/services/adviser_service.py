@@ -9,6 +9,11 @@ from django.utils import timezone
 adviser_pers = AdviserPersistence()
 
 
+def get_session_id(request):
+    session_id = request.session.session_key
+    return session_id
+
+
 @api_view(['POST'])
 def adviser_login(request):
     try:
@@ -20,9 +25,10 @@ def adviser_login(request):
             return JsonResponse(data={'error': 'Missing email or password'}, status=400)
 
         adviser = adviser_pers.login_adviser(email, password)
-
         if adviser:
             login(request, adviser)
+            session_id = get_session_id(request)
+            print(f"Session ID: {session_id}")
             adviser.last_login = timezone.now()
             return JsonResponse(data={'status': 'ok', 'message': 'Login successful'}, status=200)
         else:

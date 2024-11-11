@@ -7,6 +7,7 @@ from django.utils import timezone
 
 user_persistence = UserPersistence()
 
+
 @api_view(['POST'])
 def user_register(request):
     try:
@@ -32,7 +33,6 @@ def user_register(request):
             address,
             password
         )
-        print(n_user)
 
         return JsonResponse({'status': 'ok.'}, status=200)
     except Exception as error:
