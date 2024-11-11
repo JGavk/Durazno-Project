@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import './LandingPage.css';
 import LoginView from '../Login/LoginView';
+import { getUser } from '../services/authRoutes';
 
 const LandingPage: React.FC = () => {
     const [activeSection, setActiveSection] = useState('quienes-somos');
@@ -8,6 +9,12 @@ const LandingPage: React.FC = () => {
     const handleScrollToSection = (sectionId: string) => {
         setActiveSection(sectionId);
     };
+
+    useEffect (() => {
+        getUser().then(data => {
+            console.log(data)
+        })
+    }, [])
 
     return (
         <div className="landing-container">
