@@ -92,6 +92,11 @@ def delete_user(request):
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
 
+def get_session_id(request):
+    session_id = request.session.session_key
+    return session_id
+
+
 @api_view(['POST'])
 def user_login(request):
     try:
@@ -106,6 +111,8 @@ def user_login(request):
 
         if user:
             login(request, user)
+            session_id = get_session_id(request)
+            print(f"Session ID: {session_id}")
             user.last_login = timezone.now()
             return JsonResponse({'status': 'ok', 'message': 'User logged in.'}, status=200)
         else:
