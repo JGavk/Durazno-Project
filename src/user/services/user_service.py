@@ -120,3 +120,12 @@ def user_login(request):
 
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
+
+
+@api_view(['GET'])
+def get_all_users(request):
+    try:
+        users = UserPersistence.get_all_users()
+        return JsonResponse({'status': 'ok', 'users': users}, status=200)
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)

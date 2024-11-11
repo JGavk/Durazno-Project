@@ -11,4 +11,5 @@ urlpatterns = [
     path('user/del', delete_user, name='delete_user'),
     path('login/', user_login, name='login'),
     path('clog/', adviser_login, name='clog'),
+    path('users/', get_all_users, name='get_all_users'),
 ]

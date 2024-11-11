@@ -74,3 +74,11 @@ class UserPersistence:
                 return user
         except User.DoesNotExist:
             return "User not found"
+
+    @staticmethod
+    def get_all_users():
+        try:
+            users = User.objects.values('id', 'email', 'phone', 'address', 'is_active')  # Campos que quieres retornar
+            return list(users)
+        except Exception as e:
+            return str(e)
