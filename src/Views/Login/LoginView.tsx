@@ -3,7 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
 import { useState } from 'react';
 import './LoginView.css';
-import { registerUser} from '../services/authRoutes';
+import { registerUser, loginUser} from '../services/authRoutes';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
@@ -27,14 +27,8 @@ function LoginView() {
       phone: formData.get('phone'),
       address: formData.get('address'),
     };
-    
-    var confirmPassword = formData.get('confirmPassword');
-  
+      
     try {
-      if (userData.password !== confirmPassword) {
-        alert('Las contraseñas no coinciden.');
-        return;
-      }
 
       const response = await registerUser(userData);
       console.log(response);
@@ -49,7 +43,29 @@ function LoginView() {
       alert('Hubo un error al registrarse. Por favor, inténtelo de nuevo.');
     }
   };
- 
+
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const userData = {
+      email: formData.get('email'),
+      password: formData.get('password'),
+    };
+
+    try {
+      const response = await loginUser(userData);
+      if (response.success) {
+        console.log('User logged in:', response.data);
+        alert('Inicio de sesión exitoso');
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error('Error logging in:', error);
+      alert('Hubo un error al iniciar sesión. Por favor, inténtelo de nuevo.');
+    }
+  };
+  
   const handleVerify = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (verificationCode.length === 4) {
@@ -72,12 +88,12 @@ function LoginView() {
         </div>
 
         {isLogin ? (
-          <form autoComplete="off">
+          <form className='form-login' onSubmit={handleLogin} autoComplete="off">
             <input type="text" style={{ display: 'none' }}/> 
             <label>Email</label>
-            <input type="email" placeholder="yeimc@gmail.com" required />
+            <input type="email" name='email' placeholder="yeimc@gmail.com" required />
             <label>Contraseña</label>
-            <input type="password" placeholder="******" required />
+            <input type="password" name='password' placeholder="******" required />
             <a href="#" className="forgot-password">¿Olvidaste tu contraseña?</a>
             <button type="submit">Iniciar sesión</button>
           </form>
@@ -104,6 +120,7 @@ function LoginView() {
               placeholder="Nombre de usuario"
               pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"
               title="El nombre de usuario solo debe contener letras"
+              maxLength={15}
               required
             />
 
@@ -111,10 +128,17 @@ function LoginView() {
             <input type="email" name="email" placeholder="email@ejemplo.com" required />
 
             <label>Contraseña</label>
-            <input type="password" name="password" placeholder="******" required />
+            <input type="password" name="password" placeholder="******" minLength={8} required />
 
             <label>Confirmar Contraseña</label>
-            <input type="password" name="confirmPassword" placeholder="******" required />
+            <input type="password" name="confirmPassword" placeholder="******" required onChange={(e) => {
+              const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
+              if (e.target.value !== password) {
+                e.target.setCustomValidity('Las contraseñas no coinciden.');
+              } else {
+                e.target.setCustomValidity('');
+              }
+            }} />
 
             <label>Teléfono</label>
             <input
