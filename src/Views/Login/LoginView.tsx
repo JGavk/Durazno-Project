@@ -3,6 +3,7 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
 import { useState } from 'react';
 import './LoginView.css';
+import { registerUser} from '../services/authRoutes';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
@@ -13,11 +14,42 @@ function LoginView() {
     setIsLogin(!isLogin);
   };
 
-  const handleSignup = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    setShowVerification(true);
-  };
 
+
+  const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    const formData = new FormData(e.currentTarget);
+    const userData = {
+      picture: '',
+      username: formData.get('username'),
+      email: formData.get('email'),
+      password: formData.get('password'),
+      phone: formData.get('phone'),
+      address: formData.get('address'),
+    };
+    
+    var confirmPassword = formData.get('confirmPassword');
+  
+    try {
+      if (userData.password !== confirmPassword) {
+        alert('Las contraseñas no coinciden.');
+        return;
+      }
+
+      const response = await registerUser(userData);
+      console.log(response);
+      if (response.success) {
+        console.log('User registered:', response.data);
+        setShowVerification(true);
+      } else {
+        alert(response.message);
+      }
+    } catch (error) {
+      console.error('Error registering user:', error);
+      alert('Hubo un error al registrarse. Por favor, inténtelo de nuevo.');
+    }
+  };
+ 
   const handleVerify = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (verificationCode.length === 4) {
@@ -68,6 +100,7 @@ function LoginView() {
             <label>Nombre de usuario</label>
             <input
               type="text"
+              name="username"
               placeholder="Nombre de usuario"
               pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"
               title="El nombre de usuario solo debe contener letras"
@@ -75,27 +108,28 @@ function LoginView() {
             />
 
             <label>Email</label>
-            <input type="email" placeholder="email@ejemplo.com" required />
+            <input type="email" name="email" placeholder="email@ejemplo.com" required />
 
             <label>Contraseña</label>
-            <input type="password" placeholder="******" required />
+            <input type="password" name="password" placeholder="******" required />
 
             <label>Confirmar Contraseña</label>
-            <input type="password" placeholder="******" required />
+            <input type="password" name="confirmPassword" placeholder="******" required />
 
-            {/* IMPORTANTE DE AQUI HASTA DIRECCION ORGANIZAR CODIGO */}
             <label>Teléfono</label>
             <input
-              type="tel"
-              placeholder="123-456-7890"
-              pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
-              title="Formato: 123-456-7890"
+              type="text"
+              name="phone"
+              placeholder="1234567890"
+              pattern="[0-9]{10}"
+              title="Formato: 1234567890"
               required
             />
 
             <label>Dirección</label>
             <input
               type="text"
+              name="address"
               placeholder="Dirección completa"
               required
             />
