@@ -11,6 +11,7 @@ function LoginView() {
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   const [formData, setFormData] = useState({
+    picture: '',
     username: '',
     email: '',
     password: '',
@@ -29,12 +30,12 @@ function LoginView() {
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+    
     if (formData.password !== formData.confirmPassword) {
       alert('Las contraseñas no coinciden.');
       return;
     }
-
+    
     try {
       const response = await registerUser({
         picture: '',
@@ -44,12 +45,11 @@ function LoginView() {
         phone: formData.phone,
         address: formData.address,
       });
-      if (response.success) {
-        console.log('Usuario registrado:', response.data);
-        setShowVerification(true);
-      } else {
+      if (response.status !== 'ok.') {
         alert(response.message || 'Error al registrarse');
+        return;
       }
+      setShowVerification(true);
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       alert('Hubo un error al registrarse. Por favor, inténtelo de nuevo.');
