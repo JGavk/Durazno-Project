@@ -3,71 +3,85 @@ import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
 import { useState } from 'react';
 import './LoginView.css';
-import { registerUser, loginUser} from '../services/authRoutes';
+import { registerUser, loginUser } from '../services/authRoutes';
+import { useNavigate } from 'react-router-dom';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const [formData, setFormData] = useState({
+    username: '',
+    email: '',
+    password: '',
+    confirmPassword: '',
+    phone: '',
+    address: '',
+  });
+  const navigate = useNavigate(); // Usamos el hook de navegación
 
-  const toggleForm = () => {
-    setIsLogin(!isLogin);
+  const toggleForm = () => setIsLogin(!isLogin);
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
-
-
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const userData = {
-      picture: '',
-      username: formData.get('username'),
-      email: formData.get('email'),
-      password: formData.get('password'),
-      phone: formData.get('phone'),
-      address: formData.get('address'),
-    };
-      
-    try {
 
-      const response = await registerUser(userData);
-      console.log(response);
+    if (formData.password !== formData.confirmPassword) {
+      alert('Las contraseñas no coinciden.');
+      return;
+    }
+
+    try {
+      const response = await registerUser({
+        picture: '',
+        username: formData.username,
+        email: formData.email,
+        password: formData.password,
+        phone: formData.phone,
+        address: formData.address,
+      });
       if (response.success) {
-        console.log('User registered:', response.data);
+        console.log('Usuario registrado:', response.data);
         setShowVerification(true);
       } else {
-        alert(response.message);
+        alert(response.message || 'Error al registrarse');
       }
     } catch (error) {
-      console.error('Error registering user:', error);
+      console.error('Error al registrar usuario:', error);
       alert('Hubo un error al registrarse. Por favor, inténtelo de nuevo.');
     }
   };
 
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const formData = new FormData(e.currentTarget);
-    const userData = {
-      email: formData.get('email'),
-      password: formData.get('password'),
-    };
 
     try {
-      const response = await loginUser(userData);
+      const response = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
+
       if (response.success) {
-        console.log('User logged in:', response.data);
+        console.log('Inicio de sesión exitoso:', response.data);
         alert('Inicio de sesión exitoso');
+        // Redirigir al cliente después del login exitoso
+        navigate('/client'); // Redirige al cliente
       } else {
-        alert(response.message);
+        alert(response.message || 'Error al iniciar sesión');
       }
     } catch (error) {
-      console.error('Error logging in:', error);
+      console.error('Error al iniciar sesión:', error);
       alert('Hubo un error al iniciar sesión. Por favor, inténtelo de nuevo.');
     }
   };
-  
+
   const handleVerify = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     if (verificationCode.length === 4) {
       setIsLogin(true);
       setShowVerification(false);
@@ -80,7 +94,6 @@ function LoginView() {
     <div className="login-container">
       <div className="login-card">
         <div className={`logo ${isLogin ? 'logo-login' : showVerification ? 'logo-verification' : 'logo-signup'}`}></div>
-
         <div className="header">
           <h2 className={isLogin ? 'title-login' : 'title-signup'}>
             {isLogin ? 'Iniciar sesión' : showVerification ? '' : 'Regístrate'}
@@ -88,12 +101,25 @@ function LoginView() {
         </div>
 
         {isLogin ? (
-          <form className='form-login' onSubmit={handleLogin} autoComplete="off">
-            <input type="text" style={{ display: 'none' }}/> 
+          <form className="form-login" onSubmit={handleLogin} autoComplete="off">
             <label>Email</label>
-            <input type="email" name='email' placeholder="yeimc@gmail.com" required />
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="yeimc@gmail.com"
+              required
+            />
             <label>Contraseña</label>
-            <input type="password" name='password' placeholder="******" required />
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="******"
+              required
+            />
             <a href="#" className="forgot-password">¿Olvidaste tu contraseña?</a>
             <button type="submit">Iniciar sesión</button>
           </form>
@@ -103,7 +129,7 @@ function LoginView() {
             <input
               type="text"
               value={verificationCode}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setVerificationCode(e.target.value)}
+              onChange={(e) => setVerificationCode(e.target.value)}
               maxLength={4}
               inputMode="numeric"
               pattern="\d*"
@@ -117,47 +143,59 @@ function LoginView() {
             <input
               type="text"
               name="username"
+              value={formData.username}
+              onChange={handleInputChange}
               placeholder="Nombre de usuario"
               pattern="[a-zA-ZñÑáéíóúÁÉÍÓÚ\s]+"
-              title="El nombre de usuario solo debe contener letras"
               maxLength={15}
               required
             />
-
             <label>Email</label>
-            <input type="email" name="email" placeholder="email@ejemplo.com" required />
-
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleInputChange}
+              placeholder="email@ejemplo.com"
+              required
+            />
             <label>Contraseña</label>
-            <input type="password" name="password" placeholder="******" minLength={8} required />
-
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleInputChange}
+              placeholder="******"
+              minLength={8}
+              required
+            />
             <label>Confirmar Contraseña</label>
-            <input type="password" name="confirmPassword" placeholder="******" required onChange={(e) => {
-              const password = (document.querySelector('input[name="password"]') as HTMLInputElement).value;
-              if (e.target.value !== password) {
-                e.target.setCustomValidity('Las contraseñas no coinciden.');
-              } else {
-                e.target.setCustomValidity('');
-              }
-            }} />
-
+            <input
+              type="password"
+              name="confirmPassword"
+              value={formData.confirmPassword}
+              onChange={handleInputChange}
+              placeholder="******"
+              required
+            />
             <label>Teléfono</label>
             <input
               type="text"
               name="phone"
+              value={formData.phone}
+              onChange={handleInputChange}
               placeholder="1234567890"
-              pattern="[0-9]{10}"
-              title="Formato: 1234567890"
               required
             />
-
             <label>Dirección</label>
             <input
               type="text"
               name="address"
+              value={formData.address}
+              onChange={handleInputChange}
               placeholder="Dirección completa"
               required
             />
-
             <button type="submit">Registrarse</button>
           </form>
         )}
@@ -179,3 +217,4 @@ function LoginView() {
 }
 
 export default LoginView;
+

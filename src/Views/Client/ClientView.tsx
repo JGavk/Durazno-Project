@@ -1,16 +1,23 @@
 import React from 'react';
+import { useLocation } from 'react-router-dom';
 
-interface ClientViewProps {
-  onLogout: () => void;
-}
+const ClientView: React.FC = () => {
+  const location = useLocation();
+  const { username, email, phone, address } = location.state || {};
 
-const ClientView: React.FC< ClientViewProps> = ({ onLogout }) => {
+  if (!username || !email) {
+    return <p>No hay datos disponibles. Por favor, inicia sesión nuevamente.</p>;
+  }
+
   return (
-    <div>
-      <h1>Admin Dashboard</h1>
-      <button onClick={onLogout}>Logout</button>
+    <div style={{ padding: "20px" }}>
+      <h2>Información de la Cuenta</h2>
+      <p><strong>Nombre de Usuario:</strong> {username}</p>
+      <p><strong>Email:</strong> {email}</p>
+      <p><strong>Teléfono:</strong> {phone}</p>
+      <p><strong>Dirección:</strong> {address}</p>
     </div>
   );
 };
 
-export default  ClientView;
+export default ClientView;
