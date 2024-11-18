@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
+import { getOneUser } from '../services/authRoutes';
 
 const ClientView: React.FC = () => {
   const location = useLocation();
@@ -8,6 +9,12 @@ const ClientView: React.FC = () => {
   if (!username || !email) {
     return <p>No hay datos disponibles. Por favor, inicia sesión nuevamente.</p>;
   }
+  
+  useEffect(() => {
+    getOneUser().then(data => {
+        console.log(data);
+    });
+}, []);
 
   return (
     <div style={{ padding: "20px" }}>
