@@ -8,16 +8,18 @@ from django.utils import timezone
 
 user_persistence = UserPersistence()
 
-def validate_recaptcha(recaptcha_token):
-    secret_key = '6Lc5PoIqAAAAABmcbAP08IybyMnf-gQKLVGYxDCr'
-    url = 'https://www.google.com/recaptcha/api/siteverify'
-    data = {
-        'secret': secret_key,
-        'response': recaptcha_token,
-    }
-    response = requests.post(url, data=data)
-    result = response.json()
-    return result.get('success', False)
+
+# def validate_recaptcha(recaptcha_token):
+#     secret_key = '6Lc5PoIqAAAAABmcbAP08IybyMnf-gQKLVGYxDCr'
+#     url = 'https://www.google.com/recaptcha/api/siteverify'
+#     data = {
+#         'secret': secret_key,
+#         'response': recaptcha_token,
+#     }
+#     response = requests.post(url, data=data)
+#     result = response.json()
+#     return result.get('success', False)
+
 
 @api_view(['POST'])
 def user_register(request):
@@ -29,13 +31,13 @@ def user_register(request):
         phone = data.get('phone')
         address = data.get('address')
         password = data.get('password')
-        recaptcha_token = data.get('recaptchaToken')
-        
+        # recaptcha_token = data.get('recaptchaToken')
+
         if not email or not password:
             return JsonResponse({'error': 'Email and password are required.'}, status=400)
-        
-        if not validate_recaptcha(recaptcha_token):
-            return JsonResponse({'error': 'Captcha inválido o no verificado.'}, status=400)
+
+        # if not validate_recaptcha(recaptcha_token):
+        #     return JsonResponse({'error': 'Captcha inválido o no verificado.'}, status=400)
 
         exists = user_persistence.search_user(email)
         if exists:
@@ -143,5 +145,20 @@ def get_all_users(request):
     try:
         users = UserPersistence.get_all_users()
         return JsonResponse({'status': 'ok', 'users': users}, status=200)
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
+
+
+@login_required
+@api_view(['GET'])
+def get_user(request):
+    try:
+        session_id = request.session.session_key
+        email = request.user.email
+        if request.user.is_authenticated and session_id:
+            user = user_persistence.get_user(email)
+        else:
+            return JsonResponse({'error': 'You are not logged in.'}, status=401)
+
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)

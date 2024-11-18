@@ -82,3 +82,11 @@ class UserPersistence:
             return list(users)
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def get_user(email):
+        try:
+            user = User.objects.get(email=email)
+            return user.object.values('id', 'username', 'email', 'phone', 'address')
+        except User.DoesNotExist:
+            return "User not found"
