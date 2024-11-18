@@ -5,11 +5,13 @@ import { useState } from 'react';
 import './LoginView.css';
 import { registerUser, loginUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     picture: '',
     username: '',
@@ -28,11 +30,20 @@ function LoginView() {
     setFormData({ ...formData, [name]: value });
   };
 
+  const handleRecaptchaChange = (value: string | null) => {
+    setRecaptchaValue(value);
+  };
+
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
     if (formData.password !== formData.confirmPassword) {
       alert('Las contraseñas no coinciden.');
+      return;
+    }
+
+    if (!recaptchaValue) {
+      alert('Por favor, completa el CAPTCHA.');
       return;
     }
     
@@ -44,6 +55,7 @@ function LoginView() {
         password: formData.password,
         phone: formData.phone,
         address: formData.address,
+        recaptchaToken: recaptchaValue,
       });
       if (response.status !== 'ok.') {
         alert(response.message || 'Error al registrarse');
@@ -195,6 +207,10 @@ function LoginView() {
               onChange={handleInputChange}
               placeholder="Dirección completa"
               required
+            />
+            <ReCAPTCHA
+            sitekey="6Lc5PoIqAAAAADa8sCXJW_QIN-O_4DxlHLxoXsTS"
+            onChange={handleRecaptchaChange}
             />
             <button type="submit">Registrarse</button>
           </form>
