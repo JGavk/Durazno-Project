@@ -78,15 +78,22 @@ class UserPersistence:
     @staticmethod
     def get_all_users():
         try:
-            users = User.objects.values('id', 'email', 'phone', 'address', 'is_active')  # Campos que quieres retornar
+            users = User.objects.values('id', 'username', 'email', 'phone', 'address')  # Campos que quieres retornar
             return list(users)
         except Exception as e:
             return str(e)
 
     @staticmethod
-    def get_user(email):
+    def get_user_by_id(id):
         try:
-            user = User.objects.get(email=email)
-            return user.object.values('id', 'username', 'email', 'phone', 'address')
+            user = User.objects.get(id=id)
+            return {
+            'username': user.username,
+            'email': user.email,
+            'phone': user.phone,
+            'address': user.address
+        }
         except User.DoesNotExist:
             return "User not found"
+        except Exception as e:
+            return str(e)

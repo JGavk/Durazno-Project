@@ -3,6 +3,8 @@ from django.http import JsonResponse
 from src.user.persistences import UserPersistence
 from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import permission_classes
 from django.contrib.auth import authenticate, login
 from django.utils import timezone
 
@@ -126,20 +128,25 @@ def user_login(request):
             return JsonResponse({'error': 'Email and password are required.'}, status=400)
 
         user = user_persistence.login_user(email, password)
-
         if user:
             login(request, user)
             session_id = get_session_id(request)
-            print(f"Session ID: {session_id}")
             user.last_login = timezone.now()
-            return JsonResponse({'status': 'ok', 'message': 'User logged in.'}, status=200)
+            return JsonResponse({'status': 'ok', 'message': 'User logged in.', 'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+                'phone': user.phone,
+                'address': user.address,
+                'session_id': session_id
+            }}, status=200)
         else:
             return JsonResponse({'status': 'fail', 'message': 'Invalid credentials.'}, status=401)
 
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
-
+@permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_all_users(request):
     try:
@@ -160,5 +167,14 @@ def get_user(request):
         else:
             return JsonResponse({'error': 'You are not logged in.'}, status=401)
 
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_user_by_id(request, id):
+    try:
+        user = user_persistence.get_user_by_id(id)
+        return JsonResponse({'status': 'ok', 'user': user}, status=200)
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)

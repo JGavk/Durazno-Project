@@ -12,5 +12,5 @@ urlpatterns = [
     path('login/', user_login, name='login'),
     path('clog/', adviser_login, name='clog'),
     path('users/', get_all_users, name='get_all_users'),
-    path('client', get_user, name='get_user'),
+    path('users/<int:id>', get_user_by_id, name='get_user_by_id'),
 ]
