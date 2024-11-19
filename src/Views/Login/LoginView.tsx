@@ -1,9 +1,9 @@
 /*import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './LoginView.css';
-import { registerUser, loginUser } from '../services/authRoutes';
+import { registerUser, loginUser, getOneUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
@@ -30,9 +30,9 @@ function LoginView() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleRecaptchaChange = (value: string | null) => {
-    setRecaptchaValue(value);
-  };
+//  const handleRecaptchaChange = (value: string | null) => {
+//    setRecaptchaValue(value);
+//  };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -42,23 +42,24 @@ function LoginView() {
       return;
     }
 
-    if (!recaptchaValue) {
-      alert('Por favor, completa el CAPTCHA.');
-      return;
-    }
+//    if (!recaptchaValue) {
+//      alert('Por favor, completa el CAPTCHA.');
+//      return;
+//    }
     
     try {
-      const response = await registerUser({
+      const response: any = await registerUser({
         picture: '',
         username: formData.username,
         email: formData.email,
         password: formData.password,
         phone: formData.phone,
         address: formData.address,
-        recaptchaToken: recaptchaValue,
+        //recaptchaToken: recaptchaValue,
       });
-      if (response.status !== 'ok.') {
-        alert(response.message || 'Error al registrarse');
+      console.log(response)
+      if (response.status == 'ok.') {
+        alert(response.message || '?');
         return;
       }
       setShowVerification(true);
@@ -72,9 +73,10 @@ function LoginView() {
     e.preventDefault();
 
     try {
-      const response = await loginUser({
+      const response: any = await loginUser({
         email: formData.email,
         password: formData.password,
+        
       });
       if (response.status === 'ok') {
         alert('Inicio de sesión exitoso');
@@ -206,10 +208,7 @@ function LoginView() {
               placeholder="Dirección completa"
               required
             />
-            <ReCAPTCHA
-            sitekey="6Lc5PoIqAAAAADa8sCXJW_QIN-O_4DxlHLxoXsTS"
-            onChange={handleRecaptchaChange}
-            />
+
             <button type="submit">Registrarse</button>
           </form>
         )}
