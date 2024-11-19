@@ -20,7 +20,6 @@ def adviser_login(request):
         data = request.data
         email = data.get('email')
         password = data.get('password')
-
         if not email or not password:
             return JsonResponse(data={'error': 'Missing email or password'}, status=400)
 

@@ -23,7 +23,6 @@ class AdviserPersistence:
     @staticmethod
     def login_adviser(email, password):
         try:
-            print(password)
             adviser = Adviser.objects.get(email=email)
             if adviser.password == password:
                 return adviser
@@ -40,6 +39,6 @@ class AdviserPersistence:
                 'active': adv.active,
             }
         except adv.DoesNotExist:
-            return "User not found"
+            return "Adviser not found"
         except Exception as e:
             return str(e)
