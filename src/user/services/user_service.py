@@ -5,7 +5,7 @@ from rest_framework.decorators import api_view
 from django.contrib.auth.decorators import login_required
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import permission_classes
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.utils import timezone
 
 user_persistence = UserPersistence()
@@ -167,5 +167,13 @@ def get_user_by_id(request, id):
     try:
         user = user_persistence.get_user_by_id(id)
         return JsonResponse({'status': 'ok', 'user': user}, status=200)
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
+
+@api_view(['POST'])
+def user_logout(request):
+    try:
+        logout(request)
+        return JsonResponse({'status': 'ok', 'message': 'Logout'}, status=200)
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)

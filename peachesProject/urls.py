@@ -13,4 +13,6 @@ urlpatterns = [
     path('clog/', adviser_login, name='clog'),
     path('users/', get_all_users, name='get_all_users'),
     path('users/<int:id>', get_user_by_id, name='get_user_by_id'),
+    path('logout/', user_logout, name='user_logout'),
+    path('signin/', adviser_login, name='adviser'),
 ]

@@ -29,3 +29,17 @@ class AdviserPersistence:
                 return adviser
         except Adviser.DoesNotExist:
             return "Adviser does not exist"
+
+    @staticmethod
+    def get_adv_by_id(id):
+        try:
+            adv = Adviser.objects.get(id=id)
+            return {
+                'username': adv.name,
+                'email': adv.email,
+                'active': adv.active,
+            }
+        except adv.DoesNotExist:
+            return "User not found"
+        except Exception as e:
+            return str(e)

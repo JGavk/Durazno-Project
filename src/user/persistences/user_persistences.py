@@ -97,3 +97,4 @@ class UserPersistence:
             return "User not found"
         except Exception as e:
             return str(e)
+
