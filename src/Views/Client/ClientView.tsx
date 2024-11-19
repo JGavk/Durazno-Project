@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { getUserById, logoutUser } from '../services/authRoutes';
+import './ClientView.css';
 
 const ClientView: React.FC = () => {
 
