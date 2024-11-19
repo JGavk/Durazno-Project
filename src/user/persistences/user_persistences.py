@@ -88,11 +88,11 @@ class UserPersistence:
         try:
             user = User.objects.get(id=id)
             return {
-            'username': user.username,
-            'email': user.email,
-            'phone': user.phone,
-            'address': user.address
-        }
+                'username': user.username,
+                'email': user.email,
+                'phone': user.phone,
+                'address': user.address
+            }
         except User.DoesNotExist:
             return "User not found"
         except Exception as e:

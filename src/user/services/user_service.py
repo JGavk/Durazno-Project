@@ -59,31 +59,35 @@ def user_register(request):
         return JsonResponse({'status': 'fail', "message": error}, status=500)
 
 
-#IN PROGRESSS
-@login_required
 @api_view(['POST'])
 def update_user(request):
     try:
-        if request.user.is_authenticated:
-            user = request.user
-        else:
-            return JsonResponse({'error': 'You are not logged in.'}, status=401)
 
         data = request.data
-        picture = data.get('picture', None)
-        phone = data.get('phone', None)
-        address = data.get('address', None)
-        password = data.get('password', None)
+        email = data.get('email')
 
-        update_result = user_persistence.update_user(
-            picture=picture,
-            email=user.email,
-            phone=phone,
-            address=address,
-            password=password
-        )
-        print(update_result)
-        return JsonResponse({'status': 'ok', 'message': 'User updated successfully.'}, status=200)
+        if not email:
+            return JsonResponse({'status': 'fail', 'message': 'Email is required.'}, status=400)
+
+        user = user_persistence.search_user(email)
+
+        if user is not None:
+
+            picture = data.get('picture')
+            phone = data.get('phone')
+            address = data.get('address')
+            password = data.get('password')
+
+            update_result = user_persistence.update_user(
+                picture=picture,
+                email=email,
+                phone=phone,
+                address=address,
+                password=password
+            )
+            return JsonResponse({'status': 'ok', 'message': 'User updated successfully.'}, status=200)
+        else:
+            return JsonResponse({'status': 'fail', 'message': 'User not found.'}, status=404)
 
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
@@ -146,6 +150,7 @@ def user_login(request):
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
+
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
 def get_all_users(request):
@@ -155,20 +160,6 @@ def get_all_users(request):
     except Exception as error:
         return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
-
-@login_required
-@api_view(['GET'])
-def get_user(request):
-    try:
-        session_id = request.session.session_key
-        email = request.user.email
-        if request.user.is_authenticated and session_id:
-            user = user_persistence.get_user(email)
-        else:
-            return JsonResponse({'error': 'You are not logged in.'}, status=401)
-
-    except Exception as error:
-        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
 @permission_classes([IsAuthenticated])
 @api_view(['GET'])
