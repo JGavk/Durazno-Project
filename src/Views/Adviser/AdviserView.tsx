@@ -1,5 +1,8 @@
 import React from 'react';
 import './AdviserView.css';
+import { useEffect } from 'react';
+import { getUserById } from '../services/authRoutes';
+
 
 const AdviserView = () => {
   interface Canine {
@@ -8,6 +11,26 @@ const AdviserView = () => {
     breed: string;
     age: number;
   }
+  useEffect(() => {
+    const fetchUserData = async () => {
+
+      try {
+        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+
+        if (!session.user || !session.user.id) {
+          console.error('No user is logged in');
+          return(
+            window.location.href = '/Durazno-Project/login'
+          );
+        }
+
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   const mockCanines: Canine[] = [
       { id: 1, name: 'Rex', breed: 'German Shepherd', age: 5 },

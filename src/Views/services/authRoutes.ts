@@ -24,7 +24,6 @@ export const loginUser = async (data: any) => {
     try{
         const responseAPI = await axiosInstance.post('http://localhost:8000/login/', data);
         const userData = responseAPI.data;
-        console.log("DATAAA",userData.user)
         sessionStorage.setItem('user', JSON.stringify(userData));
         return userData;
     }catch(error){
@@ -45,7 +44,6 @@ export const getUsers = async () => {
 export const getUserById = async (id: string) => {
     try{
         const token = JSON.parse(sessionStorage.getItem('user') || '{} ');
-        console.log("TOKEN",token.user.session_id)
         const responseAPI = await axiosInstance.get(`/users/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token.user.session_id}`

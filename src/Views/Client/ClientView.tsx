@@ -14,13 +14,18 @@ const ClientView: React.FC = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+
       try {
         const session = JSON.parse(sessionStorage.getItem('user') || '{}');
-        console.log('User Session:', session);
 
-  
+        if (!session.user || !session.user.id) {
+          console.error('No user is logged in');
+          return(
+            window.location.href = '/Durazno-Project/login'
+          );
+        }
+
         const response = await getUserById(session.user.id);
-        console.log('User', response);
 
         if (response.status === 'ok') {
           setUserData(response.user); 
