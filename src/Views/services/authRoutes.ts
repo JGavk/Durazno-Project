@@ -56,3 +56,24 @@ export const getUserById = async (id: string) => {
         return error;
     }
 }
+
+export const logoutUser = async () => {
+    try {
+
+        const responseAPI = await axiosInstance.post('http://localhost:8000/logout/', {}, {
+            withCredentials: true 
+        });
+
+        if (responseAPI.status === 200) {
+            console.log("Logout exitoso");
+            sessionStorage.removeItem('user'); 
+            return { status: 'ok', message: 'User logged out successfully.' };
+        } else {
+            console.error("Error en el logout:", responseAPI.data);
+            return { status: 'fail', message: 'Logout failed.' };
+        }
+    } catch (error) {
+        console.error('Error en el logout:', error);
+        return { status: 'fail', message: 'Error logging out.' };
+    }
+};

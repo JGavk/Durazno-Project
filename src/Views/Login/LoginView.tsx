@@ -1,9 +1,9 @@
 /*import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'*/
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './LoginView.css';
-import { registerUser, loginUser, getOneUser } from '../services/authRoutes';
+import { registerUser, loginUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
 import ReCAPTCHA from 'react-google-recaptcha';
 
