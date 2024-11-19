@@ -1,21 +1,35 @@
 import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
+import { getUserById } from '../services/authRoutes';
 
 const ClientView: React.FC = () => {
-  const location = useLocation();
-  const { username, email, phone, address } = location.state || {};
+  //const [userData, setUserData] = useState({ username: '', email: '', phone: '', address: '' });
+  //const { username, email, phone, address } = userData;
 
-  if (!username || !email) {
-    return <p>No hay datos disponibles. Por favor, inicia sesión nuevamente.</p>;
-  }
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+        console.log("User Session:", session);
+        const response = await getUserById(session.user.id);
+        console.log("Usuario", response);
+        //setUserData(user);
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
+  //if (!username || !email) {
+    //return <p>No hay datos disponibles. Por favor, inicia sesión nuevamente.</p>;
+  //}
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Información de la Cuenta</h2>
-      <p><strong>Nombre de Usuario:</strong> {username}</p>
-      <p><strong>Email:</strong> {email}</p>
-      <p><strong>Teléfono:</strong> {phone}</p>
-      <p><strong>Dirección:</strong> {address}</p>
+      
     </div>
   );
 };

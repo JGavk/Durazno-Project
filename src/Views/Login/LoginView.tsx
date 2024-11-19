@@ -76,9 +76,7 @@ function LoginView() {
         email: formData.email,
         password: formData.password,
       });
-
-      if (response.success) {
-        console.log('Inicio de sesión exitoso:', response.data);
+      if (response.status === 'ok') {
         alert('Inicio de sesión exitoso');
         // Redirigir al cliente después del login exitoso
         navigate('/client'); // Redirige al cliente

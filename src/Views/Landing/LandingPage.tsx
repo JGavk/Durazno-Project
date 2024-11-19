@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom'; // Importa useNavigate
 import './LandingPage.css';
-import { getUser } from '../services/authRoutes';
+import { getUsers } from '../services/authRoutes';
 
 const LandingPage: React.FC = () => {
     const navigate = useNavigate(); // Crear el hook de navegación
@@ -22,7 +22,7 @@ const LandingPage: React.FC = () => {
     };
 
     useEffect(() => {
-        getUser().then(data => {
+        getUsers().then(data => {
             console.log(data);
         });
     }, []);
