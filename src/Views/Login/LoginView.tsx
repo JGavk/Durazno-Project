@@ -5,13 +5,13 @@ import { useState } from 'react';
 import './LoginView.css';
 import { registerUser, loginUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
+//import ReCAPTCHA from 'react-google-recaptcha';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  //const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     picture: '',
     username: '',
@@ -80,14 +80,14 @@ function LoginView() {
       });
       if (response.status === 'ok') {
         alert('Inicio de sesión exitoso');
-        // Redirigir al cliente después del login exitoso
-        navigate('/client'); // Redirige al cliente
+  
+        navigate('/client'); 
       } else {
-        alert(response.message || 'Error al iniciar sesión');
+        alert(response.message || 'Login error');
       }
     } catch (error) {
-      console.error('Error al iniciar sesión:', error);
-      alert('Hubo un error al iniciar sesión. Por favor, inténtelo de nuevo.');
+      console.error('Login error:', error);
+      alert('Login error, try again.');
     }
   };
 
