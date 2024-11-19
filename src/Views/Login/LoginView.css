@@ -96,6 +96,16 @@ form {
   top: 50px; 
 }
 
+.label-centered {
+  display: block;
+  text-align: center;
+  font-size: 1.2em;
+  margin-bottom: 1em;
+  background-color: #f6a000;
+  color: rgb(37, 16, 157);
+  font-weight: bold;
+}
+
 label {
   margin-bottom: 0.5rem;
   font-size: 0.9rem;

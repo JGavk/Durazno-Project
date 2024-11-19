@@ -54,7 +54,7 @@ const LandingPage: React.FC = () => {
                             En Durazno, somos una empresa líder en Colombia dedicada a la venta de caninos de alta calidad. ...
                         </p>
                         <button className="register-button" onClick={handleRegisterClick}>
-                            Regístrate
+                            Inicia Sesión
                         </button>
                     </section>
                 )}

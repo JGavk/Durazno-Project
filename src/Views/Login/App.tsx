@@ -2,6 +2,7 @@ import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import LandingPage from '../Landing/LandingPage';
 import LoginView from '../Login/LoginView';
 import ClientView from '../Client/ClientView';
+import AdviserView from '../Adviser/AdviserView';
 
 function App() {
   return (
@@ -10,6 +11,7 @@ function App() {
         <Route path="/" element={<LandingPage />} />
         <Route path="/login" element={<LoginView />} />
         <Route path="/client" element={<ClientView />} />
+        <Route path='/adviser' element={<AdviserView />} />
         <Route
           path="/clientes-felices"
           element={

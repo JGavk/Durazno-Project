@@ -9,6 +9,7 @@ import { useNavigate } from 'react-router-dom';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
+  const [isAdviserLogin, setIsAdviserLogin] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
   //const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
@@ -24,6 +25,7 @@ function LoginView() {
   const navigate = useNavigate(); // Usamos el hook de navegación
 
   const toggleForm = () => setIsLogin(!isLogin);
+  const toggleAdviserLogin = () => setIsAdviserLogin(!isAdviserLogin);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -91,6 +93,27 @@ function LoginView() {
     }
   };
 
+  const handleAdviserLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    try {
+      const response: any = await loginUser({
+        email: formData.email,
+        password: formData.password,
+      });
+      if (response.status === 'ok') {
+        alert('Inicio de sesión exitoso');
+  
+        navigate('/adviser'); 
+      } else {
+        alert(response.message || 'Login error');
+      }
+    } catch (error) {
+      console.error('Login error:', error);
+      alert('Login error, try again.');
+    }
+  };
+
   const handleVerify = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -113,7 +136,8 @@ function LoginView() {
         </div>
 
         {isLogin ? (
-          <form className="form-login" onSubmit={handleLogin} autoComplete="off">
+          <form className="form-login" onSubmit={isAdviserLogin ? handleAdviserLogin : handleLogin} autoComplete="off">
+            <label className="label-centered">{isAdviserLogin ? 'Asesor' : 'Cliente'}</label>
             <label>Email</label>
             <input
               type="email"
@@ -217,6 +241,8 @@ function LoginView() {
           {isLogin ? (
             <>
               ¿No tienes cuenta? <a href="#" onClick={toggleForm}>Regístrate aquí</a>
+              <br />
+              ¿Eres asesor? <a href='#' onClick={toggleAdviserLogin}>Inicia sesión aquí</a>
             </>
           ) : (
             <>
