@@ -5,14 +5,14 @@ import { useState } from 'react';
 import './LoginView.css';
 import { registerUser, loginUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
-//import ReCAPTCHA from 'react-google-recaptcha';
+import ReCAPTCHA from 'react-google-recaptcha';
 
 function LoginView() {
   const [isLogin, setIsLogin] = useState(true);
   const [isAdviserLogin, setIsAdviserLogin] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [verificationCode, setVerificationCode] = useState('');
-  //const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
+  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     picture: '',
     username: '',
@@ -32,9 +32,9 @@ function LoginView() {
     setFormData({ ...formData, [name]: value });
   };
 
-//  const handleRecaptchaChange = (value: string | null) => {
-//    setRecaptchaValue(value);
-//  };
+  const handleRecaptchaChange = (value: string | null) => {
+    setRecaptchaValue(value);
+  };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,10 +44,10 @@ function LoginView() {
       return;
     }
 
-//    if (!recaptchaValue) {
-//      alert('Por favor, completa el CAPTCHA.');
-//      return;
-//    }
+    if (!recaptchaValue) {
+      alert('Por favor, completa el CAPTCHA.');
+      return;
+    }
     
     try {
       const response: any = await registerUser({
@@ -57,14 +57,14 @@ function LoginView() {
         password: formData.password,
         phone: formData.phone,
         address: formData.address,
-        //recaptchaToken: recaptchaValue,
+        recaptchaToken: recaptchaValue,
       });
       console.log(response)
-      if (response.status == 'ok.') {
-        alert(response.message || '?');
+      if (response.status == 200) {
+        navigate('/');
         return;
       }
-      setShowVerification(true);
+      
     } catch (error) {
       console.error('Error al registrar usuario:', error);
       alert('Hubo un error al registrarse. Por favor, inténtelo de nuevo.');
@@ -232,7 +232,10 @@ function LoginView() {
               placeholder="Dirección completa"
               required
             />
-
+            <ReCAPTCHA
+              sitekey="6Ld76YIqAAAAANPgl9jxDCT8_CyDekhj6awcGbqO"
+              onChange={handleRecaptchaChange}
+            />
             <button type="submit">Registrarse</button>
           </form>
         )}
@@ -242,7 +245,7 @@ function LoginView() {
             <>
               ¿No tienes cuenta? <a href="#" onClick={toggleForm}>Regístrate aquí</a>
               <br />
-              ¿Eres asesor? <a href='#' onClick={toggleAdviserLogin}>Inicia sesión aquí</a>
+              ¿Eres {!isAdviserLogin ? 'Asesor' : 'Cliente'}? <a href='#' onClick={toggleAdviserLogin}>Inicia sesión aquí</a>
             </>
           ) : (
             <>
