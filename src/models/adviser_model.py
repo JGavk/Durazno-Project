@@ -2,6 +2,8 @@ from django.db import models
 from django.utils import timezone
 from django.contrib.auth.models import AbstractBaseUser
 from django.contrib.auth.hashers import make_password, check_password
+from django.contrib.auth.hashers import make_password
+from .validators import validate_password_strength, validate_username
 
 
 class Adviser(models.Model):
@@ -14,9 +16,16 @@ class Adviser(models.Model):
     
     #USERNAME_FIELD = 'email'
     #REQUIRED_FIELDS = ['name', 'password', 'active',]
-
-    def set_password(self, password):
-        self.password = make_password(password)
+    def clean(self):
+        validate_username(self.name)
+        validate_password_strength(self.password)
+    
+    def save(self, *args, **kwargs):
+        self.clean()
+        if not self.password.startswith('pbkdf2_'):
+            self.password = make_password(self.password)
+        super().save(*args, **kwargs)
+        
 
     def check_password(self, password):
         return check_password(password, self.password)
