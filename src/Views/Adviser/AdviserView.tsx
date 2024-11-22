@@ -1,8 +1,8 @@
 import React from 'react';
 import './AdviserView.css';
 import { useEffect } from 'react';
-import { getUserById } from '../services/authRoutes';
-
+import { useNavigate } from 'react-router-dom';
+import { logoutAdviser } from '../services/authRoutes';
 
 const AdviserView = () => {
   interface Canine {
@@ -11,17 +11,32 @@ const AdviserView = () => {
     breed: string;
     age: number;
   }
+  const navigate = useNavigate();
+  const handleLogout = async () => {
+    try {
+      const response = await logoutAdviser();
+      if (response.status !== 'ok') {
+        throw new Error('Error logging out');
+      }
+      const csrftoken = sessionStorage.getItem('csrftoken') || '';
+      console.log('csrftoken:', csrftoken);
+
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
+    // Redirigir a la página de inicio de sesión
+    navigate('/login');
+  };
+  
   useEffect(() => {
     const fetchUserData = async () => {
 
       try {
-        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+        const csrftoken = sessionStorage.getItem('csrftoken') || '';
+        console.log('csrftoken:', csrftoken);
 
-        if (!session.user || !session.user.id) {
+        if (!csrftoken) {
           console.error('No user is logged in');
-          return(
-            window.location.href = '/Durazno-Project/login'
-          );
         }
 
       } catch (error) {
@@ -40,6 +55,7 @@ const AdviserView = () => {
     return (
         <div>
             <h1>Manage Canines</h1>
+            <button onClick={handleLogout}>Log Out</button>
             <table>
                 <thead>
                     <tr>

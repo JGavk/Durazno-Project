@@ -32,6 +32,17 @@ export const loginUser = async (data: any) => {
 
 }
 
+export const loginAdviser = async (data: any) => {
+    try{
+        const responseAPI = await axiosInstance.post('http://localhost:8000/adv/login/', data);
+        const userData = responseAPI.data;
+        return userData;
+    }catch(error){
+        return error;
+    }
+
+}
+
 export const getUsers = async () => {
     try{
         const responseAPI = await axios.get('http://localhost:8000/users');
@@ -75,3 +86,24 @@ export const logoutUser = async () => {
         return { status: 'fail', message: 'Error logging out.' };
     }
 };
+
+export const logoutAdviser = async () => {
+    try {
+
+        const responseAPI = await axiosInstance.post('http://localhost:8000/adv/logout/', {}, {
+            withCredentials: true 
+        });
+
+        if (responseAPI.status === 200) {
+            console.log("Logout exitoso");
+            sessionStorage.removeItem('csrftoken'); 
+            return { status: 'ok', message: responseAPI.data.message };
+        } else {
+            console.error("Error en el logout:", responseAPI.data);
+            return { status: 'fail', message: 'Logout failed.' };
+        }
+    } catch (error) {
+        console.error('Error en el logout:', error);
+        return { status: 'fail', message: 'Error logging out.' };
+    }
+}
