@@ -36,10 +36,14 @@ def adviser_login(request):
         adviser.save()
 
         response = JsonResponse(data={
-            "message": "Inicio de sesión exitoso",
-            "advisor_id": adviser.id,
-            "advisor_name": adviser.name,
-            "email": adviser.email
+            "status": "ok",
+            "details": "Login successful",
+            "data": {
+                "advisor_id": adviser.id,
+                "advisor_name": adviser.name,
+                "email": adviser.email,
+                
+            }
         }, status=200)
 
         response.set_cookie(
@@ -67,7 +71,7 @@ def adviser_logout(request):
     try:
         logout(request)
         
-        response = JsonResponse({"message": "Logout successful"}, status=200)
+        response = JsonResponse(data={"message": "Logout successful"}, status=200)
         
         response.delete_cookie('sessionid', samesite='Lax')
         
