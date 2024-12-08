@@ -7,7 +7,7 @@
 
 body {
   font-family: 'Poppins', sans-serif;
-  background-image: url('/Fondo-login.avif'); 
+  background-color: #e8caaa; 
   background-size: cover;
   background-position: center;
   height: 100vh;
@@ -102,7 +102,6 @@ form {
   font-size: 1.2em;
   margin-bottom: 1em;
   background-color: #f6a000;
-  color: rgb(37, 16, 157);
   font-weight: bold;
 }
 
@@ -166,5 +165,7 @@ button:hover {
   font-weight: bold;
   text-decoration: none;
 }
+
+
 
 

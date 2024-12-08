@@ -11,6 +11,7 @@ const AdviserView = () => {
     breed: string;
     age: number;
   }
+
   const navigate = useNavigate();
   const handleLogout = async () => {
     try {
