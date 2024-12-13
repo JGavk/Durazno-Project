@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -29,20 +29,53 @@ const ClientView: React.FC = () => {
   const [showInfo, setShowInfo] = useState(false);
   const [showCatalog, setShowCatalog] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedBreed, setSelectedBreed] = useState("All");
+  const [selectedAge, setSelectedAge] = useState("All");
+  const [tempBreed, setTempBreed] = useState("All");
+  const [tempAge, setTempAge] = useState("All");
+  const [contentMarginTop, setContentMarginTop] = useState(0);
+
   const itemsPerPage = 4;
+
+  useEffect(() => {
+    const navbar = document.querySelector(".navbar");
+    if (navbar) {
+      setContentMarginTop(navbar.clientHeight);
+    }
+  }, []);
 
   const toggleShowInfo = () => {
     setShowInfo(true);
-    setShowCatalog(false); // Oculta el catálogo
+    setShowCatalog(false);
   };
 
   const toggleShowCatalog = () => {
     setShowCatalog(true);
-    setShowInfo(false); // Oculta la información de cuenta
+    setShowInfo(false);
   };
 
-  const totalPages = Math.ceil(mockCanines.length / itemsPerPage);
-  const displayedCanines = mockCanines.slice(
+  const handleTempBreedChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTempBreed(e.target.value);
+  };
+
+  const handleTempAgeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setTempAge(e.target.value);
+  };
+
+  const applyFilters = () => {
+    setSelectedBreed(tempBreed);
+    setSelectedAge(tempAge);
+    setCurrentPage(1);
+  };
+
+  const filteredCanines = mockCanines.filter((canine) => {
+    const breedMatch = selectedBreed === "All" || canine.breed === selectedBreed;
+    const ageMatch = selectedAge === "All" || canine.age === parseInt(selectedAge);
+    return breedMatch && ageMatch;
+  });
+
+  const totalPages = Math.ceil(filteredCanines.length / itemsPerPage);
+  const displayedCanines = filteredCanines.slice(
     (currentPage - 1) * itemsPerPage,
     currentPage * itemsPerPage
   );
@@ -61,8 +94,7 @@ const ClientView: React.FC = () => {
 
   return (
     <>
-      {/* Navbar */}
-      <nav className="navbar navbar-expand-lg">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand"> Durazno </a>
           <button
@@ -80,7 +112,7 @@ const ClientView: React.FC = () => {
             <ul className="navbar-nav mx-auto">
               <li className="nav-item">
                 <a
-                  className={`nav-link ${showCatalog ? "active" : ""}`}
+                  className={`nav-link ${showCatalog}`}
                   href="#catalog"
                   onClick={toggleShowCatalog}
                 >
@@ -99,7 +131,7 @@ const ClientView: React.FC = () => {
               </li>
             </ul>
             <ul className="navbar-nav">
-            <li className="nav-item dropdown">
+              <li className="nav-item dropdown">
                 <a
                   className="nav-link dropdown-toggle"
                   href="#"
@@ -131,9 +163,8 @@ const ClientView: React.FC = () => {
         </div>
       </nav>
 
-      {/* Información de cuenta */}
       {showInfo && (
-        <div className="info-container">
+        <div className="info-container" style={{ marginTop: contentMarginTop }}>
           <h2>Información de la Cuenta</h2>
           <p>
             <strong>Nombre de Usuario:</strong> {username || "No disponible"}
@@ -150,10 +181,54 @@ const ClientView: React.FC = () => {
         </div>
       )}
 
-      {/* Catálogo */}
       {showCatalog && (
-        <div id="catalog" className="container mt-5">
+        <div id="catalog" className="container mt-5" style={{ marginTop: contentMarginTop }}>
           <h2 className="text-center mb-4">Catálogo de Caninos</h2>
+
+          <div className="row mb-4">
+            <div className="col-md-6">
+              <label htmlFor="breedFilter" className="form-label">
+                Filtrar por Raza
+              </label>
+              <select
+                id="breedFilter"
+                className="form-select"
+                value={tempBreed}
+                onChange={handleTempBreedChange}
+              >
+                <option value="All">Todas</option>
+                {[...new Set(mockCanines.map((c) => c.breed))].map((breed) => (
+                  <option key={breed} value={breed}>
+                    {breed}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-md-6">
+              <label htmlFor="ageFilter" className="form-label">
+                Filtrar por Edad
+              </label>
+              <select
+                id="ageFilter"
+                className="form-select"
+                value={tempAge}
+                onChange={handleTempAgeChange}
+              >
+                <option value="All">Todas</option>
+                {[...new Set(mockCanines.map((c) => c.age))].map((age) => (
+                  <option key={age} value={age}>
+                    {age}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="col-12 text-center mt-3">
+              <button className="btn btn-primary" onClick={applyFilters}>
+                Aplicar filtros
+              </button>
+            </div>
+          </div>
+
           <div className="row justify-content-center">
             {displayedCanines.map((canine) => (
               <div key={canine.id} className="col-md-6 col-lg-4 mb-4">
@@ -174,13 +249,13 @@ const ClientView: React.FC = () => {
                         className="btn btn-primary"
                         onClick={() => handleAdopt(canine.name)}
                       >
-                        ¡Adóptame!
+                        Adoptar
                       </button>
                       <button
                         className="btn btn-secondary"
                         onClick={() => handleMoreInfo(canine.name)}
                       >
-                        Más Información
+                        Más información
                       </button>
                     </div>
                   </div>
@@ -189,7 +264,6 @@ const ClientView: React.FC = () => {
             ))}
           </div>
 
-          {/* Paginación */}
           <div className="pagination-container">
             <button
               onClick={() => handlePageChange(currentPage - 1)}
@@ -197,9 +271,6 @@ const ClientView: React.FC = () => {
             >
               Anterior
             </button>
-            <span>
-              Página {currentPage} de {totalPages}
-            </span>
             <button
               onClick={() => handlePageChange(currentPage + 1)}
               disabled={currentPage === totalPages}
@@ -214,6 +285,9 @@ const ClientView: React.FC = () => {
 };
 
 export default ClientView;
+
+
+
 
 
 
