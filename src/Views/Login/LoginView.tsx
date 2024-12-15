@@ -22,7 +22,7 @@ function LoginView() {
     phone: '',
     address: '',
   });
-  const navigate = useNavigate(); // Usamos el hook de navegación
+  const navigate = useNavigate(); 
 
   const toggleForm = () => setIsLogin(!isLogin);
   const toggleAdviserLogin = () => setIsAdviserLogin(!isAdviserLogin);

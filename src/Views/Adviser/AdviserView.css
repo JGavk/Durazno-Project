@@ -1,39 +1,83 @@
-div {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-}
 
-h1 {
-    color: #333;
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
-}
-
-th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-}
-
-th {
-    background-color: #f4f4f4;
-    color: #333;
-}
-
-tr:nth-child(even) {
-    background-color: #f9f9f9;
-}
-
-tr:hover {
-    background-color: #f1f1f1;
-}
-
-td {
-    color: #555;
-}
+.sidebar {
+    background-color: #1e1e1e;
+    color: white;
+    width: 250px;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+  }
+  
+  .sidebar a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+  }
+  
+  .sidebar a:hover {
+    color: #f6a000;
+  }
+  
+  .sidebar .nav-link.active {
+    background-color: #bf592b;
+    color: white;
+    border-radius: 5px;
+  }
+  
+  .sidebar .nav-item {
+    margin-bottom: 10px;
+  }
+  
+  .sidebar .dropdown-toggle {
+    color: #f6a000;
+  }
+  
+  .sidebar .dropdown-menu {
+    background-color: #1e1e1e;
+    border: none;
+  }
+  
+  .sidebar .dropdown-item {
+    color: white;
+  }
+  
+  .sidebar .dropdown-item:hover {
+    background-color: #bf592b;
+    color: white;
+  }
+  
+  .main-content {
+    background-color: #e8caaa;
+    flex-grow: 1;
+    padding: 2rem;
+  }
+  
+  .main-content h1 {
+    color: #bf592b;
+    margin-bottom: 1.5rem;
+  }
+  
+  .table th {
+    color: #f6a000;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #fdf3e5; 
+  }
+  
+  .table-hover tbody tr:hover {
+    background-color: #f6a000;
+    color: white;
+  }
+  
+  .btn-logout {
+    color: #fff;
+    background-color: #bf592b;
+    border: none;
+  }
+  
+  .btn-logout:hover {
+    background-color: #f6a000;
+  }
+  

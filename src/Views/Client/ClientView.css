@@ -1,102 +1,107 @@
-body {
-  font-family: Arial, sans-serif;
-  margin-top: 10px;
-  padding-top: 66rem;
+root {
   background-color: #e8caaa;
 }
 
-.navbar {
-  background-color: #bf592b !important;
-  color: white;
+.client-container {
+  font-family: Arial, sans-serif;
+  margin-top: 10px;
+  background-color: #e8caaa;
 }
 
-.navbar-brand {
+.client-container .navbar {
+  background-color: #bf592b !important;
+}
+
+.client-container .navbar-brand {
   width: 100%;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  color: white !important;
+  color: #f6a000 !important;
   font-weight: bold;
   font-size: 24px;
 }
 
-.navbar-nav .nav-link {
-  color: white !important;
+.client-container .navbar-nav .nav-link {
+  color: #f6a000 !important;
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.navbar-nav .nav-link:hover {
+.client-container .navbar-nav .nav-link:hover {
   color: #f6a000 !important;
 }
 
-.info-container {
+.client-container .info-container {
   margin: 120px auto;
   padding: 20px;
-  background-color: white;
+  background-color: #e8caaa;
   border-radius: 8px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
   max-width: 600px;
 }
 
-.info-container h2 {
+.client-container .info-container h2 {
   color: #bf592b;
   margin-bottom: 20px;
 }
 
-.info-container p {
+.client-container .info-container p {
   font-size: 16px;
-  color: #333;
   line-height: 1.5;
 }
 
-#catalog {
+.client-container #catalog {
   margin-top: 120px;
+  width: 100vw; 
+  padding-top: 66rem;
+  background-color: #e8caaa; 
 }
 
-#catalog h2 {
+.client-container #catalog h2 {
   color: #bf592b;
   margin-bottom: 20px;
   font-size: 32px;
   font-weight: bold;
+  text-align: center;
 }
 
-.card {
+.client-container .card {
   border: none;
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.card:hover {
+.client-container .card:hover {
   transform: translateY(-5px);
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-.card img {
-  border-radius: 10px 10px 0 0;
+.client-container .card img {
+  border-radius: 5px 5px 0 0;
 }
 
-.card-body {
+.client-container .card-body {
   background-color: white;
-  border: 1px solid #ddd;
+  border: 1px #ddd;
   border-top: none;
   border-radius: 0 0 10px 10px;
   padding: 15px;
 }
 
-.card-title {
+.client-container .card-title {
   font-weight: bold;
   color: #bf592b;
   margin-bottom: 10px;
 }
 
-.card-text {
+.client-container .card-text {
   color: #555;
 }
 
-.card-buttons {
+.client-container .card-buttons {
   margin-top: auto;
   display: flex;
   gap: 10px;
@@ -104,45 +109,44 @@ body {
   justify-content: center;
 }
 
-.card-buttons .btn-primary {
+.client-container .card-buttons .btn-primary {
   background-color: #bf592b;
   border: none;
 }
 
-.card-buttons .btn-primary:hover {
+.client-container .card-buttons .btn-primary:hover {
   background-color: #f6a000;
 }
 
-.card-buttons .btn-secondary {
+.client-container .card-buttons .btn-secondary {
   background-color: #f6a000;
   border: none;
 }
 
-.card-buttons .btn-secondary:hover {
+.client-container .card-buttons .btn-secondary:hover {
   background-color: #bf592b;
-  color: white;
 }
 
-.form-label {
+.client-container .form-label {
   font-weight: bold;
   color: #bf592b;
 }
 
-.form-select {
+.client-container .form-select {
   border-color: #bf592b;
   border-radius: 5px;
 }
 
-.btn-primary {
+.client-container .btn-primary {
   background-color: #bf592b;
   border: none;
 }
 
-.btn-primary:hover {
+.client-container .btn-primary:hover {
   background-color: #f6a000;
 }
 
-.pagination-container {
+.client-container .pagination-container {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -150,7 +154,7 @@ body {
   margin: 30px 0;
 }
 
-.pagination-container button {
+.client-container .pagination-container button {
   background-color: #bf592b;
   color: white;
   border: none;
@@ -160,11 +164,11 @@ body {
   transition: background-color 0.2s;
 }
 
-.pagination-container button:hover {
+.client-container .pagination-container button:hover {
   background-color: #f6a000;
 }
 
-.pagination-container button:disabled {
+.client-container .pagination-container button:disabled {
   background-color: #ddd;
   color: #666;
   cursor: not-allowed;

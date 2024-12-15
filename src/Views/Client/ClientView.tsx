@@ -94,6 +94,7 @@ const ClientView: React.FC = () => {
 
   return (
     <>
+      <div className="client-container" style={{ marginTop: contentMarginTop }}>
       <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 fixed-top">
         <div className="container-fluid">
           <a className="navbar-brand"> Durazno </a>
@@ -162,7 +163,7 @@ const ClientView: React.FC = () => {
           </div>
         </div>
       </nav>
-
+      
       {showInfo && (
         <div className="info-container" style={{ marginTop: contentMarginTop }}>
           <h2>Información de la Cuenta</h2>
@@ -280,6 +281,7 @@ const ClientView: React.FC = () => {
           </div>
         </div>
       )}
+      </div>
     </>
   );
 };

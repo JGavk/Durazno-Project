@@ -11,12 +11,10 @@ const LandingPage: React.FC = () => {
         setActiveSection(sectionId);
     };
 
-    // Redirigir al login cuando el usuario haga click en "Inicia sesión"
     const handleLoginClick = () => {
         navigate('/login');
     };
 
-    // Redirigir al login cuando el usuario haga click en "Regístrate"
     const handleRegisterClick = () => {
         navigate('/login');
     };
@@ -42,7 +40,6 @@ const LandingPage: React.FC = () => {
                 >
                     Clientes felices
                 </button>
-                {/* Redirige al login al hacer clic en este botón */}
                 <button onClick={handleLoginClick}>Inicia sesión</button>
             </div>
 

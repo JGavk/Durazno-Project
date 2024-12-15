@@ -1,15 +1,16 @@
+:root {
+  background-color: #e8caaa;
+}
+
 * {
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
   font-family: 'Poppins', sans-serif;
 }
 
 body {
   font-family: 'Poppins', sans-serif;
   background-color: #e8caaa; 
-  background-size: cover;
-  background-position: center;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -30,7 +31,6 @@ body {
   border-radius: 10px;
   width: 350px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  color: white;
   position: relative;
 }
 
@@ -101,7 +101,7 @@ form {
   text-align: center;
   font-size: 1.2em;
   margin-bottom: 1em;
-  background-color: #f6a000;
+  background-color: #bf592b;
   font-weight: bold;
 }
 
