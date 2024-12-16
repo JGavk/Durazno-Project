@@ -15,4 +15,5 @@ urlpatterns = [
     path('users/<int:id>', get_user_by_id, name='get_user_by_id'),
     path('logout/', user_logout, name='user_logout'),
     path('signin/', adviser_login, name='adviser'),
+    path('doggo/', canine_register, name='canine_register'),
 ]

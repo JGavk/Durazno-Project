@@ -1,4 +1,4 @@
-from src.models import Adviser
+from src.models import Adviser, Canine
 from django.forms.models import model_to_dict
 
 
@@ -40,5 +40,30 @@ class AdviserPersistence:
             }
         except adv.DoesNotExist:
             return "Adviser not found"
+        except Exception as e:
+            return str(e)
+
+    @staticmethod
+    def register_canine(picture,
+                        age,
+                        race,
+                        pedigree,
+                        gender,
+                        color,
+                        vaccines,
+                        price):
+        try:
+            canine = Canine(
+                picture=picture,
+                age=age,
+                race=race,
+                pedigree=pedigree,
+                gender=gender,
+                color=color,
+                vaccines=vaccines,
+                price=price,
+            )
+            inserted_canine = canine.save()
+            return inserted_canine
         except Exception as e:
             return str(e)

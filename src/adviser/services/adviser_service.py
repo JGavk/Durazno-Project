@@ -1,7 +1,7 @@
 from datetime import timezone
-
+from rest_framework.permissions import IsAuthenticated
 from src.adviser.persistences import AdviserPersistence
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from django.contrib.auth import login
 from django.http import JsonResponse
 from django.utils import timezone
@@ -36,3 +36,35 @@ def adviser_login(request):
     except Exception as e:
         return JsonResponse(data={'error': str(e)}, status=500)
 
+
+@permission_classes([IsAuthenticated])
+@api_view(['POST'])
+def canine_register(request):
+    try:
+        data = request.data
+        picture = data.get('picture', request.FILES.get('picture'))
+        age = data.get('age')
+        race = data.get('race')
+        pedigree = data.get('pedigree')
+        gender = data.get('gender')
+        color = data.get('color')
+        vaccine = data.get('vaccine')
+        price = data.get('price')
+
+        if not data:
+            return JsonResponse(data={'error': 'Missing data'}, status=400)
+
+        dog_done = adviser_pers.register_canine(
+            picture,
+            age,
+            race,
+            pedigree,
+            gender,
+            color,
+            vaccine,
+            price
+        )
+
+        return JsonResponse(data={'status': 'ok', 'message': 'Register successful'}, status=200)
+    except Exception as e:
+        return JsonResponse(data={'error': str(e)}, status=500)
