@@ -47,14 +47,7 @@ class AdviserPersistence:
             return str(e)
 
     @staticmethod
-    def register_canine(picture,
-                        age,
-                        race,
-                        pedigree,
-                        gender,
-                        color,
-                        vaccines,
-                        price):
+    def register_canine(picture, age, race, pedigree, gender, color, vaccines, price):
         try:
             canine = Canine(
                 picture=picture,
@@ -66,7 +59,8 @@ class AdviserPersistence:
                 vaccines=vaccines,
                 price=price,
             )
-            inserted_canine = canine.save()
-            return inserted_canine
+            print(canine)
+            canine.save()
+            return canine
         except Exception as e:
             return str(e)

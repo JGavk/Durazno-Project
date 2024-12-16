@@ -84,27 +84,21 @@ def adviser_logout(request):
 def canine_register(request):
     try:
         data = request.data
-        picture = data.get('picture', request.FILES.get('picture'))
-        age = data.get('age')
-        race = data.get('race')
-        pedigree = data.get('pedigree')
-        gender = data.get('gender')
-        color = data.get('color')
-        vaccine = data.get('vaccine')
-        price = data.get('price')
 
-        if not data:
+        required_fields = ['picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price']
+
+        if not all(data.get(field) for field in required_fields):
             return JsonResponse(data={'error': 'Missing data'}, status=400)
 
         dog_done = adviser_pers.register_canine(
-            picture,
-            age,
-            race,
-            pedigree,
-            gender,
-            color,
-            vaccine,
-            price
+            picture=data.get('picture'),
+            age=data.get('age'),
+            race=data.get('race'),
+            pedigree=data.get('pedigree'),
+            gender=data.get('gender'),
+            color=data.get('color'),
+            vaccines=data.get('vaccines'),
+            price=data.get('price')
         )
 
         return JsonResponse(data={'status': 'ok', 'message': 'Register successful'}, status=200)
