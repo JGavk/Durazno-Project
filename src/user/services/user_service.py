@@ -12,7 +12,7 @@ user_persistence = UserPersistence()
 
 
 def validate_recaptcha(recaptcha_token):
-    secret_key = '6Ld76YIqAAAAANokc3OVsKH63dJ0J-pGPgCMjE6C'
+    secret_key = '6Lc-qJ0qAAAAAJ6ktu1DHZ7aEVUreItDZxqz7g1F'
     url = 'https://www.google.com/recaptcha/api/siteverify'
     data = {
         'secret': secret_key,
