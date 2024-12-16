@@ -36,7 +36,7 @@ def adviser_login(request):
         adviser.save()
 
         response = JsonResponse(data={
-            "message": "Inicio de sesión exitoso",
+            "message": "Login successful",
             "advisor_id": adviser.id,
             "advisor_name": adviser.name,
             "email": adviser.email
@@ -60,8 +60,8 @@ def verify_session(request):
     user_id = request.session.get('user_id')
 
     if user_id:
-        return JsonResponse({"message": "Sesión activa", "advisor_id": user_id}, status=200)
-    return JsonResponse({"error": "No hay sesión activa"}, status=401)
+        return JsonResponse({"message": "Active session", "advisor_id": user_id}, status=200)
+    return JsonResponse({"error": "non session"}, status=401)
 
 
 @api_view(['POST'])
