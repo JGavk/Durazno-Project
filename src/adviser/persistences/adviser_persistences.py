@@ -31,7 +31,7 @@ class AdviserPersistence:
 
     def get_advisor_by_email(email):
         return Adviser.objects.filter(email=email).first()
-    
+
     @staticmethod
     def get_adv_by_id(id):
         try:

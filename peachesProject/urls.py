@@ -16,4 +16,7 @@ urlpatterns = [
     path('logout/', user_logout, name='user_logout'),
     path('signin/', adviser_login, name='adviser'),
     path('doggo/', canine_register, name='canine_register'),
+    path('adv/login/', adviser_login, name='adviser_login'),
+    path('adv/logout/', adviser_logout, name='adviser_logout'),
+    path('adv/verify/', verify_session, name='verify_session'),
 ]
