@@ -41,7 +41,7 @@ const AdviserLogin: React.FC = () => {
                     email,
                     password,
                 });
-                if (response.status == "ok") {
+                if (response.message == "Login successful") {
                     navigate('/adviser');
                     console.log("Logged In");
                     const cookies = document.cookie;
@@ -52,10 +52,10 @@ const AdviserLogin: React.FC = () => {
                         console.log('csrftoken cookie not found: ', cookies);
                     }
                 } else {
-                    console.log("Error Loggin in: ", response.response.data.error);
+                    console.log("Error Loggin in: ", response);
                 }
             } catch (error) {
-                console.log(error);
+                console.log("Error: ",error);
             }
         }
     };
