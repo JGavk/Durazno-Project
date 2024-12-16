@@ -3,7 +3,7 @@ from django.urls import path, include
 from src.user.services.user_service import *
 from src.adviser.services.adviser_service import *
 
-#
+# URLs for the project
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('login/register', user_register, name='user_register'),
