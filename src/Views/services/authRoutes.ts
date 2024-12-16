@@ -107,3 +107,16 @@ export const logoutAdviser = async () => {
         return { status: 'fail', message: 'Error logging out.' };
     }
 }
+
+export const registerCan = async (data: any) => {
+    try {
+
+        const responseAPI = await axiosInstance.post('http://localhost:8000/doggo/',  data, {
+            withCredentials: true
+        });
+        console.log(data.JSON)
+        return responseAPI
+    }catch(error){
+        return{status: 'failed registration', message: 'Try again'}
+    }    
+}
