@@ -45,7 +45,7 @@ const AdviserView: React.FC = () => {
     } catch (error) {
       console.error('Error logging out:', error);
     }
-    navigate('/login');
+    navigate('/adv/login');
   };
 
   useEffect(() => {
@@ -53,12 +53,16 @@ const AdviserView: React.FC = () => {
       try {
         const csrftoken = sessionStorage.getItem('csrftoken') || '';
         console.log('csrftoken:', csrftoken);
-        
+
+        if (!csrftoken) {
+          navigate('/adv/login');
+          return;
+        }
+
         const response = await getCanes();
         console.log('response:', response);
         setCaninesbd(response.canines);
 
-        if (!csrftoken) console.error('No user is logged in');
       } catch (error) {
         console.error('Error fetching user data:', error);
       }
@@ -67,9 +71,9 @@ const AdviserView: React.FC = () => {
   }, []);
 
   const handleAddCanine = async() => {
-    closeModal();
 
     try {
+      console.log('formCanine:', formCanine);
       const response = await registerCan({
         picture: formCanine.picture,
         age: parseInt(formCanine.age, 10),
@@ -80,10 +84,13 @@ const AdviserView: React.FC = () => {
         vaccines: formCanine.vaccines,
         price: parseFloat(formCanine.price),
       });
-      if (response.status === 400){
+      if (response.status !== 200){
         alert(response.response.data.error);
         return;
       }
+      console.log('response:', response);
+      setCaninesbd([...caninesbd, response.newCanine]);
+      closeModal();
       alert('Canino registrado exitosamente');
     }
     catch (error) {
