@@ -68,8 +68,19 @@ class AdviserPersistence:
     @staticmethod
     def get_all_canines():
         try:
-            all_canines = Canine.objects.values('picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price')
+            all_canines = Canine.objects.values('id', 'picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price')
             print(all_canines)
             return list(all_canines)
+        except Exception as e:
+            return str(e)
+
+    @staticmethod
+    def delete_canine():
+        try:
+            canine = Canine.objects.get(id=id)
+            canine.delete()
+            return "Canine deleted"
+        except Canine.DoesNotExist:
+            return "Canine does not exist"
         except Exception as e:
             return str(e)
