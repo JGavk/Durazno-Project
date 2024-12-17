@@ -104,3 +104,14 @@ def canine_register(request):
         return JsonResponse(data={'status': 'ok', 'message': 'Register successful'}, status=200)
     except Exception as e:
         return JsonResponse(data={'error': str(e)}, status=500)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_canines(request):
+    try:
+        canine = adviser_pers.get_all_canines()
+        print(canine)
+        return JsonResponse(data={'canines': canine}, status=200)
+    except Exception as e:
+        return JsonResponse(data={'error': str(e)}, status=500)

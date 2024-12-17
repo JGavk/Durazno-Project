@@ -64,3 +64,12 @@ class AdviserPersistence:
             return canine
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def get_all_canines():
+        try:
+            all_canines = Canine.objects.values('picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price')
+            print(all_canines)
+            return list(all_canines)
+        except Exception as e:
+            return str(e)

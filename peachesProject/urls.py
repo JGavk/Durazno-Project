@@ -17,4 +17,5 @@ urlpatterns = [
     path('adv/login/', adviser_login, name='adviser_login'),
     path('adv/logout/', adviser_logout, name='adviser_logout'),
     path('adv/verify/', verify_session, name='verify_session'),
+    path('rtdog/', get_canines, name='get_canines'),
 ]
