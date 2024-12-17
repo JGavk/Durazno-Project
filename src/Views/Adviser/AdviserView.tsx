@@ -84,12 +84,14 @@ const AdviserView: React.FC = () => {
         vaccines: formCanine.vaccines,
         price: parseFloat(formCanine.price),
       });
-      if (response.status !== 200){
-        alert(response.response.data.error);
+      
+      if (response.status !== 'ok'){
+        //alert(response.response.data.error);
+        console.error('Error registering canine:', response);
         return;
       }
       console.log('response:', response);
-      setCaninesbd([...caninesbd, response.newCanine]);
+      setCaninesbd([...caninesbd, { ...response.newCanine, id: response.can}]);
       closeModal();
       alert('Canino registrado exitosamente');
     }
