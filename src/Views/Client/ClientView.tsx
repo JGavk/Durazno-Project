@@ -67,8 +67,8 @@ const ClientView: React.FC = () => {
       const result = await logoutUser();
       if (result.status === 'ok') {
         alert('Sesión cerrada exitosamente.');
-        sessionStorage.clear(); // Limpia la sesión en el frontend
-        window.location.href = '/login'; // Redirige al usuario a la página de login
+        sessionStorage.clear(); 
+        window.location.href = '/login'; 
         alert('Session closed.');
         sessionStorage.clear(); 
         window.location.href = '/Durazno-Project/login'; 
@@ -81,6 +81,7 @@ const ClientView: React.FC = () => {
       console.error('Logout failed:', error);
     }
   };
+
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
     if (navbar) {
@@ -141,7 +142,7 @@ const ClientView: React.FC = () => {
       <div className="client-container" style={{ marginTop: contentMarginTop }}>
       <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 fixed-top">
         <div className="container-fluid">
-          <a className="navbar-brand"> Durazno </a>
+          <a className="icon-style"> Durazno </a>
           <button
             className="navbar-toggler"
             type="button"
@@ -156,23 +157,23 @@ const ClientView: React.FC = () => {
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav mx-auto">
               <li className="nav-item">
-                <a
+                <button
                   className={`nav-link ${showCatalog}`}
-                  href="#catalog"
+                  
                   onClick={toggleShowCatalog}
                 >
                   Catálogo
-                </a>
+                </button>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <button className="nav-link" >
                   Carrito de compras
-                </a>
+                </button>
               </li>
               <li className="nav-item">
-                <a className="nav-link" href="#">
+                <button className="nav-link" >
                   Atención al cliente
-                </a>
+                </button>
               </li>
             </ul>
             <ul className="navbar-nav">
