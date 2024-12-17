@@ -3,29 +3,21 @@ import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./ClientView.css";
+import { getUserById, logoutUser, getCans } from '../services/authRoutes';
 
 interface Canine {
   id: number;
   name: string;
-  breed: string;
+  race: string;
   age: number;
+  gender: string;
+  color: string;  
+  picture: string;  
+  price: number;  
 }
-
-const mockCanines: Canine[] = [
-  { id: 1, name: "Rex", breed: "German Shepherd", age: 5 },
-  { id: 2, name: "Bella", breed: "Labrador Retriever", age: 3 },
-  { id: 3, name: "Max", breed: "Bulldog", age: 4 },
-  { id: 4, name: "Daisy", breed: "Poodle", age: 2 },
-  { id: 5, name: "Charlie", breed: "Beagle", age: 3 },
-  { id: 6, name: "Molly", breed: "Golden Retriever", age: 6 },
-  { id: 7, name: "Buddy", breed: "Boxer", age: 4 },
-  { id: 8, name: "Luna", breed: "Husky", age: 5 },
-];
 
 const ClientView: React.FC = () => {
   const location = useLocation();
-  const { username, email, phone, address } = location.state || {};
-
   const [showInfo, setShowInfo] = useState(false);
   const [showCatalog, setShowCatalog] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,6 +28,67 @@ const ClientView: React.FC = () => {
   const [contentMarginTop, setContentMarginTop] = useState(0);
 
   const itemsPerPage = 4;
+  const [canines, setCanines] = useState<Canine[]>([]);
+
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    address: '',
+  });
+
+  
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+        console.log("User Session:", session);
+        const response = await getUserById(session.user.id);
+        console.log('User', response);
+        if (response.status === 'ok') {
+          setUserData(response.user); 
+        } else {
+          console.error('Error to obtain user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+
+  useEffect(() => {
+    const fetchCanines = async () => {
+      try {
+        const data = await getCans(); 
+        if (data.canines && Array.isArray(data.canines)) {
+          setCanines(data.canines); 
+        } else {
+          console.error("Error: Canines data is not an array");
+        }
+      } catch (error) {
+        console.error("Error fetching canines:", error);
+      }
+    };
+  
+    fetchCanines();
+  }, []);
+
+  const handleLogout = async () => {
+    try {
+      const result = await logoutUser();
+      if (result.status === 'ok') {
+        sessionStorage.clear(); 
+        window.location.href = '/login'; 
+      } else {
+        alert('Logout error ' + result.message);
+      }
+    } catch (error) {
+      console.error('Logout error', error);
+    }
+  };
 
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
@@ -68,8 +121,8 @@ const ClientView: React.FC = () => {
     setCurrentPage(1);
   };
 
-  const filteredCanines = mockCanines.filter((canine) => {
-    const breedMatch = selectedBreed === "All" || canine.breed === selectedBreed;
+  const filteredCanines = canines.filter((canine) => {
+    const breedMatch = selectedBreed === "All" || canine.race === selectedBreed;
     const ageMatch = selectedAge === "All" || canine.age === parseInt(selectedAge);
     return breedMatch && ageMatch;
   });
@@ -95,200 +148,173 @@ const ClientView: React.FC = () => {
   return (
     <>
       <div className="client-container" style={{ marginTop: contentMarginTop }}>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 fixed-top">
-        <div className="container-fluid">
-          <a className="navbar-brand"> Durazno </a>
-          <button
-            className="navbar-toggler"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#navbarNavDropdown"
-            aria-controls="navbarNavDropdown"
-            aria-expanded="false"
-            aria-label="Toggle navigation"
-          >
-            <span className="navbar-toggler-icon"></span>
-          </button>
-          <div className="collapse navbar-collapse" id="navbarNavDropdown">
-            <ul className="navbar-nav mx-auto">
-              <li className="nav-item">
-                <a
-                  className={`nav-link ${showCatalog}`}
-                  href="#catalog"
-                  onClick={toggleShowCatalog}
-                >
-                  Catálogo
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Carrito de compras
-                </a>
-              </li>
-              <li className="nav-item">
-                <a className="nav-link" href="#">
-                  Atención al cliente
-                </a>
-              </li>
-            </ul>
-            <ul className="navbar-nav">
-              <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Tu cuenta
-                </a>
-                <ul className="dropdown-menu">
-                  <li>
-                    <a
-                      className="dropdown-item"
-                      href="#"
-                      onClick={toggleShowInfo}
-                    >
-                      Ver cuenta
-                    </a>
-                  </li>
-                  <li>
-                    <a className="dropdown-item" href="#">
-                      Salir de sesión
-                    </a>
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </nav>
-      
-      {showInfo && (
-        <div className="info-container" style={{ marginTop: contentMarginTop }}>
-          <h2>Información de la Cuenta</h2>
-          <p>
-            <strong>Nombre de Usuario:</strong> {username || "No disponible"}
-          </p>
-          <p>
-            <strong>Email:</strong> {email || "No disponible"}
-          </p>
-          <p>
-            <strong>Teléfono:</strong> {phone || "No disponible"}
-          </p>
-          <p>
-            <strong>Dirección:</strong> {address || "No disponible"}
-          </p>
-        </div>
-      )}
-
-      {showCatalog && (
-        <div id="catalog" className="container mt-5" style={{ marginTop: contentMarginTop }}>
-          <h2 className="text-center mb-4">Catálogo de Caninos</h2>
-
-          <div className="row mb-4">
-            <div className="col-md-6">
-              <label htmlFor="breedFilter" className="form-label">
-                Filtrar por Raza
-              </label>
-              <select
-                id="breedFilter"
-                className="form-select"
-                value={tempBreed}
-                onChange={handleTempBreedChange}
-              >
-                <option value="All">Todas</option>
-                {[...new Set(mockCanines.map((c) => c.breed))].map((breed) => (
-                  <option key={breed} value={breed}>
-                    {breed}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-md-6">
-              <label htmlFor="ageFilter" className="form-label">
-                Filtrar por Edad
-              </label>
-              <select
-                id="ageFilter"
-                className="form-select"
-                value={tempAge}
-                onChange={handleTempAgeChange}
-              >
-                <option value="All">Todas</option>
-                {[...new Set(mockCanines.map((c) => c.age))].map((age) => (
-                  <option key={age} value={age}>
-                    {age}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="col-12 text-center mt-3">
-              <button className="btn btn-primary" onClick={applyFilters}>
-                Aplicar filtros
-              </button>
+        <nav className="navbar navbar-expand-lg navbar-light bg-light w-100 fixed-top">
+          <div className="container-fluid">
+            <a className="icon-style"> Durazno </a>
+            <button
+              className="navbar-toggler"
+              type="button"
+              data-bs-toggle="collapse"
+              data-bs-target="#navbarNavDropdown"
+              aria-controls="navbarNavDropdown"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+            >
+              <span className="navbar-toggler-icon"></span>
+            </button>
+            <div className="collapse navbar-collapse" id="navbarNavDropdown">
+              <ul className="navbar-nav mx-auto">
+                <li className="nav-item">
+                  <button className="nav-link" onClick={toggleShowCatalog}>
+                    Catálogo
+                  </button>
+                </li>
+                <li className="nav-item">
+                  <button className="nav-link">Carrito de compras</button>
+                </li>
+                <li className="nav-item">
+                  <button className="nav-link">Atención al cliente</button>
+                </li>
+              </ul>
+              <ul className="navbar-nav">
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle"
+                    href="#"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Tu cuenta
+                  </a>
+                  <ul className="dropdown-menu">
+                    <li>
+                      <a className="dropdown-item" href="#" onClick={toggleShowInfo}>
+                        Ver cuenta
+                      </a>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" href="#" onClick={handleLogout}>
+                        Salir de sesión
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
             </div>
           </div>
-
-          <div className="row justify-content-center">
-            {displayedCanines.map((canine) => (
-              <div key={canine.id} className="col-md-6 col-lg-4 mb-4">
-                <div className="card h-100 shadow-sm">
-                  <img
-                    src={`https://via.placeholder.com/150?text=${canine.name}`}
-                    className="card-img-top"
-                    alt={`Imagen de ${canine.name}`}
-                  />
-                  <div className="card-body d-flex flex-column">
-                    <h5 className="card-title">{canine.name}</h5>
-                    <p className="card-text">
-                      Este canino es un <strong>{canine.breed}</strong> y tiene{" "}
-                      <strong>{canine.age}</strong> años.
-                    </p>
-                    <div className="card-buttons">
-                      <button
-                        className="btn btn-primary"
-                        onClick={() => handleAdopt(canine.name)}
-                      >
+        </nav>
+  
+        {showInfo && (
+          <div className="info-container">
+            <h2>Información de la Cuenta</h2>
+            <p>
+              <strong>Nombre de Usuario:</strong> {userData.username || "No disponible"}
+            </p>
+            <p>
+              <strong>Email:</strong> {userData.email || "No disponible"}
+            </p>
+            <p>
+              <strong>Teléfono:</strong> {userData.phone || "No disponible"}
+            </p>
+            <p>
+              <strong>Dirección:</strong> {userData.address || "No disponible"}
+            </p>
+          </div>
+        )}
+  
+        {showCatalog && (
+          <div className="container mt-5">
+            <h2 className="text-center mb-4">Catálogo de Caninos</h2>
+  
+            <div className="row mb-4">
+              <div className="col-md-6">
+                <label className="form-label">Filtrar por Raza</label>
+                <select
+                  className="form-select"
+                  value={tempBreed}
+                  onChange={handleTempBreedChange}
+                >
+                  <option value="All">Todas</option>
+                  {[...new Set(canines.map((c) => c.race))].map((breed) => (
+                    <option key={breed} value={breed}>
+                      {breed}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-md-6">
+                <label className="form-label">Filtrar por Edad</label>
+                <select
+                  className="form-select"
+                  value={tempAge}
+                  onChange={handleTempAgeChange}
+                >
+                  <option value="All">Todas</option>
+                  {[...new Set(canines.map((c) => c.age))].map((age) => (
+                    <option key={age} value={age}>
+                      {age}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="col-12 text-center mt-3">
+                <button className="btn btn-primary" onClick={applyFilters}>
+                  Aplicar filtros
+                </button>
+              </div>
+            </div>
+  
+            <div className="row">
+              {displayedCanines.map((canine) => (
+                <div key={canine.id} className="col-md-4 mb-4">
+                  <div className="card">
+                    <img
+                      src={canine.picture}
+                      alt={canine.race}
+                      className="card-img-top"
+                      style={{ height: "200px", objectFit: "cover" }}
+                    />
+                    <div className="card-body">
+                      <h5 className="card-title">{canine.name}</h5>
+                      <p>Raza: {canine.race}</p>
+                      <p>Edad: {canine.age} años</p>
+                      <p>Género: {canine.gender}</p>
+                      <p>Color: {canine.color}</p>
+                      <p>Precio: ${canine.price}</p>
+                      <button className="btn btn-primary" onClick={() => handleAdopt(canine.name)}>
                         Adoptar
                       </button>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleMoreInfo(canine.name)}
-                      >
-                        Más información
+                      <button className="btn btn-info ms-2" onClick={() => handleMoreInfo(canine.name)}>
+                        Más Información
                       </button>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
+  
+            <nav>
+              <ul className="pagination justify-content-center">
+                {Array.from({ length: totalPages }).map((_, index) => (
+                  <li
+                    key={index}
+                    className={`page-item ${currentPage === index + 1 ? "active" : ""}`}
+                  >
+                    <button className="page-link" onClick={() => handlePageChange(index + 1)}>
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </nav>
           </div>
-
-          <div className="pagination-container">
-            <button
-              onClick={() => handlePageChange(currentPage - 1)}
-              disabled={currentPage === 1}
-            >
-              Anterior
-            </button>
-            <button
-              onClick={() => handlePageChange(currentPage + 1)}
-              disabled={currentPage === totalPages}
-            >
-              Siguiente
-            </button>
-          </div>
-        </div>
-      )}
+        )}
       </div>
     </>
   );
-};
-
+}
 export default ClientView;
-
-
 
 
 

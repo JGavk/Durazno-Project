@@ -52,6 +52,16 @@ export const getUsers = async () => {
     }
 }
 
+export const getCans = async () => {
+    try{
+        const responseAPI = await axios.get('http://localhost:8000/rtdog/')
+        return responseAPI.data
+    }catch(error){
+        return error
+    }
+}
+
+
 export const getUserById = async (id: string) => {
     try{
         const token = JSON.parse(sessionStorage.getItem('user') || '{} ');
