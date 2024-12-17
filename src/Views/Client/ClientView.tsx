@@ -20,6 +20,7 @@ const ClientView: React.FC = () => {
   const location = useLocation();
   const [showInfo, setShowInfo] = useState(false);
   const [showCatalog, setShowCatalog] = useState(true);
+  const [showCart, setShowCart] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedBreed, setSelectedBreed] = useState("All");
   const [selectedAge, setSelectedAge] = useState("All");
@@ -100,10 +101,18 @@ const ClientView: React.FC = () => {
   const toggleShowInfo = () => {
     setShowInfo(true);
     setShowCatalog(false);
+    setShowCart(false);
   };
 
   const toggleShowCatalog = () => {
     setShowCatalog(true);
+    setShowInfo(false);
+    setShowCart(false);
+  };
+
+  const toggleShowCart = () => {
+    setShowCart(true);
+    setShowCatalog(false);
     setShowInfo(false);
   };
 
@@ -137,12 +146,41 @@ const ClientView: React.FC = () => {
     setCurrentPage(page);
   };
 
-  const handleAdopt = (name: string) => {
-    alert(`Has adoptado a ${name}. ¡Felicidades!`);
-  };
-
   const handleMoreInfo = (name: string) => {
     alert(`Más información sobre ${name}.`);
+  };
+
+  const handleRemoveFromCart = (id: number) => {
+    setCart((prevCart) => prevCart.filter((canine) => canine.id !== id));
+  };
+  
+
+  const [cart, setCart] = useState<Canine[]>([]);
+  const [adoptedDogs, setAdoptedDogs] = useState<string[]>([]);
+  const handleAdopt = (canine: Canine) => {
+    setCart((prevCart) => [...prevCart, canine]);
+    setCanines((prevCanines) => prevCanines.filter((c) => c.id !== canine.id));
+    setAdoptedDogs((prevAdopted) => [...prevAdopted, canine.name]);
+    alert(`Has adoptado a ${canine.name}. ¡Felicidades!`);
+  };
+  const handleCheckout = () => {
+    if (cart.length === 0) {
+      alert("Tu carrito está vacío.");
+      return;
+    }
+  
+    const invoice = `
+      *** Factura de Adopción ***
+      Usuario: ${userData.username || "No disponible"}
+      Email: ${userData.email || "No disponible"}
+  
+      Caninos Adoptados:
+      ${cart.map((dog) => `- ${dog.name} (${dog.race}, ${dog.age} años)`).join("\n")}
+  
+      Total: $${cart.reduce((total, dog) => total + dog.price, 0)}
+    `;
+    alert(invoice);
+    setCart([]); 
   };
 
   return (
@@ -170,7 +208,9 @@ const ClientView: React.FC = () => {
                   </button>
                 </li>
                 <li className="nav-item">
-                  <button className="nav-link">Carrito de compras</button>
+                  <button className="nav-link" onClick={toggleShowCart}>
+                    Carrito de compras <span className="badge cart-badge">{cart.length}</span>
+                  </button>
                 </li>
                 <li className="nav-item">
                   <button className="nav-link">Atención al cliente</button>
@@ -219,9 +259,63 @@ const ClientView: React.FC = () => {
             </p>
             <p>
               <strong>Dirección:</strong> {userData.address || "No disponible"}
+        {adoptedDogs.length > 0 && (
+          <div>
+            <h3>Caninos Adoptados:</h3>
+            <ul>
+              {adoptedDogs.map((dog, index) => (
+                <li key={index}>Adoptaste a {dog}</li>
+              ))}
+            </ul>
+          </div>
+        )}
             </p>
           </div>
         )}
+        
+        {showCart && (
+          <div className="container mt-5">
+            <h2 className="text-center mb-4">Carrito de Compras</h2>
+              {cart.length === 0 ? (
+            <p className="text-center">El carrito está vacío.</p>
+        ) : (
+            <div className="row">
+              {cart.map((canine) => (
+              <div key={canine.id} className="col-md-4 mb-4">
+                <div className="card">
+                  <img
+                    src={canine.picture}
+                    alt={canine.name}
+                    className="card-img-top"
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
+                <div className="card-body">
+                <h5 className="card-title">{canine.name}</h5>
+                <p>Raza: {canine.race}</p>
+                <p>Edad: {canine.age} años</p>
+                <p>Precio: ${canine.price}</p>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleRemoveFromCart(canine.id)}
+                >
+                  Eliminar
+                </button>
+              </div>
+            </div>
+          </div>
+              ))}
+          </div>
+        )}
+        {cart.length > 0 && (
+          <div className="text-center mt-4">
+            <button className="btn btn-success" onClick={handleCheckout}>
+            Comprar Canino(s)
+            </button>
+          </div>
+        )}
+        </div>
+        )}
+
   
         {showCatalog && (
           <div className="container mt-5">
@@ -282,7 +376,7 @@ const ClientView: React.FC = () => {
                       <p>Género: {canine.gender}</p>
                       <p>Color: {canine.color}</p>
                       <p>Precio: ${canine.price}</p>
-                      <button className="btn btn-primary" onClick={() => handleAdopt(canine.name)}>
+                      <button className="btn btn-primary" onClick={() => handleAdopt(canine)}>
                         Adoptar
                       </button>
                       <button className="btn btn-info ms-2" onClick={() => handleMoreInfo(canine.name)}>
@@ -315,8 +409,6 @@ const ClientView: React.FC = () => {
   );
 }
 export default ClientView;
-
-
 
 
 
