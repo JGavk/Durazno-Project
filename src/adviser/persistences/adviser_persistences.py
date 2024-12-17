@@ -75,7 +75,7 @@ class AdviserPersistence:
             return str(e)
 
     @staticmethod
-    def delete_canine():
+    def delete_canine(id):
         try:
             canine = Canine.objects.get(id=id)
             canine.delete()

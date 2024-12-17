@@ -115,3 +115,24 @@ def get_canines(request):
         return JsonResponse(data={'canines': canine}, status=200)
     except Exception as e:
         return JsonResponse(data={'error': str(e)}, status=500)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['DELETE'])
+def canine_delete(request):
+    try:
+        data = request.data
+        id = data.get('id')
+
+        if not id:
+            return JsonResponse(data={'error': 'Missing data'}, status=400)
+
+        deleted_can = adviser_pers.delete_canine(id)
+
+        if deleted_can == "Canine deleted":
+            return JsonResponse(data={'message': 'Deleted successfully'}, status=200)
+        elif deleted_can == "Canine does not exist":
+            return JsonResponse(data={'error': 'Canine not found'}, status=404)
+
+    except Exception as e:
+        return JsonResponse(data={'error': str(e)}, status=500)
