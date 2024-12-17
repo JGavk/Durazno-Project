@@ -114,9 +114,18 @@ export const registerCan = async (data: any) => {
         const responseAPI = await axiosInstance.post('http://localhost:8000/doggo/',  data, {
             withCredentials: true
         });
-        console.log(data.JSON)
-        return responseAPI
+        console.log(responseAPI.data);
+        return responseAPI.data
     }catch(error){
-        return{status: 'failed registration', message: 'Try again'}
+        return error;
     }    
+}
+
+export const getCanes = async () => {
+    try{
+        const responseAPI = await axiosInstance.get('http://localhost:8000/rtdog/');
+        return responseAPI.data;
+    }catch(error){
+        return error;
+    }
 }

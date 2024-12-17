@@ -1,31 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import './AdviserView.css';
 import { useNavigate } from 'react-router-dom';
-import { logoutAdviser } from '../services/authRoutes';
+import { logoutAdviser, registerCan, getCanes } from '../services/authRoutes';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const AdviserView: React.FC = () => {
-  interface Canine {
+  
+  interface Caninebd {
     id: number;
-    name: string;
-    breed: string;
+    picture: string;
     age: number;
+    race: string;
+    pedigree: string;
+    gender: string;
+    color: string;
+    vaccines: boolean;
+    price: number;
   }
-
   const navigate = useNavigate();
 
-  const [canines, setCanines] = useState<Canine[]>([
-    { id: 1, name: 'Rex', breed: 'German Shepherd', age: 5 },
-    { id: 2, name: 'Bella', breed: 'Labrador Retriever', age: 3 },
-    { id: 3, name: 'Max', breed: 'Bulldog', age: 4 },
-  ]);
+  const [caninesbd, setCaninesbd] = useState<Caninebd[]>([]);
 
-  const [selectedCanine, setSelectedCanine] = useState<Canine | null>(null);
+  const [selectedCanine, setSelectedCanine] = useState<Caninebd | null>(null);
   const [showModal, setShowModal] = useState(false);
   const [modalType, setModalType] = useState<'add' | 'update' | 'delete'>('add');
-  const [formCanine, setFormCanine] = useState({ name: '', breed: '', age: '' });
-
+  const [formCanine, setFormCanine] = useState({
+    age: '', picture: '', race: '', pedigree: '', gender: '', color: '', vaccines: false, price: ''
+  });
+  /*
+  "picture",
+  "age",
+  "race",
+  "pedigree",
+  "gender",
+  "color",
+  "vaccines",
+  "price"
+  */
   const handleLogout = async () => {
     try {
       const response = await logoutAdviser();
@@ -41,6 +53,11 @@ const AdviserView: React.FC = () => {
       try {
         const csrftoken = sessionStorage.getItem('csrftoken') || '';
         console.log('csrftoken:', csrftoken);
+        
+        const response = await getCanes();
+        console.log('response:', response);
+        setCaninesbd(response.canines);
+
         if (!csrftoken) console.error('No user is logged in');
       } catch (error) {
         console.error('Error fetching user data:', error);
@@ -49,46 +66,70 @@ const AdviserView: React.FC = () => {
     fetchUserData();
   }, []);
 
-  const handleAddCanine = () => {
-    const newId = canines.length > 0 ? canines[canines.length - 1].id + 1 : 1;
-    const newEntry: Canine = {
-      id: newId,
-      name: formCanine.name,
-      breed: formCanine.breed,
-      age: parseInt(formCanine.age, 10),
-    };
-    setCanines([...canines, newEntry]);
+  const handleAddCanine = async() => {
     closeModal();
+
+    try {
+      const response = await registerCan({
+        picture: formCanine.picture,
+        age: parseInt(formCanine.age, 10),
+        race: formCanine.race,
+        pedigree: formCanine.pedigree,
+        gender: formCanine.gender,
+        color: formCanine.color,
+        vaccines: formCanine.vaccines,
+        price: parseFloat(formCanine.price),
+      });
+      if (response.status === 400){
+        alert(response.response.data.error);
+        return;
+      }
+      alert('Canino registrado exitosamente');
+    }
+    catch (error) {
+      console.error('Error registering canine:', error);
+    }
   };
 
   const handleUpdateCanine = () => {
     if (selectedCanine) {
-      const updatedCanines = canines.map((canine) =>
-        canine.id === selectedCanine.id
-          ? { ...canine, ...formCanine, age: parseInt(formCanine.age, 10) }
+      const updatedCanines = caninesbd.map((canine) =>
+        canine.id  === selectedCanine.id
+          ? { ...canine, ...formCanine, age: parseInt(formCanine.age, 10), price: parseFloat(formCanine.price) }
           : canine
       );
-      setCanines(updatedCanines);
+      setCaninesbd(updatedCanines);
       closeModal();
     }
   };
 
   const handleDeleteCanine = () => {
     if (selectedCanine) {
-      const updatedCanines = canines.filter((canine) => canine.id !== selectedCanine.id);
-      setCanines(updatedCanines);
+      const updatedCanines = caninesbd.filter((canine) => canine.id !== selectedCanine.id);
+      setCaninesbd(updatedCanines);
       closeModal();
     }
   };
 
-  const openModal = (type: 'add' | 'update' | 'delete', canine?: Canine) => {
+  const openModal = (type: 'add' | 'update' | 'delete', canine?: Caninebd) => {
     setModalType(type);
     if (canine) {
       setSelectedCanine(canine);
-      setFormCanine({ name: canine.name, breed: canine.breed, age: String(canine.age) });
+      setFormCanine({
+        age: String(canine.age),
+        picture: canine.picture,
+        race: canine.race,
+        pedigree: canine.pedigree,
+        gender: canine.gender,
+        color: canine.color,
+        vaccines: canine.vaccines,
+        price: String(canine.price),
+      });
     } else {
       setSelectedCanine(null);
-      setFormCanine({ name: '', breed: '', age: '' });
+      setFormCanine({
+       age: '', picture: '', race: '', pedigree: '', gender: '', color: '', vaccines: false, price: ''
+      });
     }
     setShowModal(true);
   };
@@ -96,7 +137,9 @@ const AdviserView: React.FC = () => {
   const closeModal = () => {
     setShowModal(false);
     setSelectedCanine(null);
-    setFormCanine({ name: '', breed: '', age: '' });
+    setFormCanine({
+      age: '', picture: '', race: '', pedigree: '', gender: '', color: '', vaccines: false, price: ''
+    });
   };
 
   return (
@@ -139,19 +182,21 @@ const AdviserView: React.FC = () => {
           <thead>
             <tr style={{ color: '#f6a000' }}>
               <th>ID</th>
-              <th>Nombre</th>
-              <th>Raza</th>
               <th>Edad</th>
+              <th>Género</th>
+              <th>Color</th>
+              <th>Precio</th>
               <th>Acciones</th>
             </tr>
           </thead>
-          <tbody>
-            {canines.map((canine) => (
+          <tbody> 
+            {caninesbd.map((canine) => (
               <tr key={canine.id}>
                 <td>{canine.id}</td>
-                <td>{canine.name}</td>
-                <td>{canine.breed}</td>
                 <td>{canine.age}</td>
+                <td>{canine.gender}</td>
+                <td>{canine.color}</td> 
+                <td>{canine.price}</td>
                 <td>
                   <button className="btn btn-sm btn-warning me-2" onClick={() => openModal('update', canine)}>Editar</button>
                   <button className="btn btn-sm btn-danger" onClick={() => openModal('delete', canine)}>Eliminar</button>
@@ -171,25 +216,57 @@ const AdviserView: React.FC = () => {
               <>
                 <input
                   type="text"
-                  placeholder="Nombre"
-                  value={formCanine.name}
-                  onChange={(e) => setFormCanine({ ...formCanine, name: e.target.value })}
-                />
-                <input
-                  type="text"
-                  placeholder="Raza"
-                  value={formCanine.breed}
-                  onChange={(e) => setFormCanine({ ...formCanine, breed: e.target.value })}
-                />
-                <input
-                  type="text"
                   placeholder="Edad"
                   value={formCanine.age}
                   onChange={(e) => setFormCanine({ ...formCanine, age: e.target.value })}
                 />
+                <input
+                  type="text"
+                  placeholder="Imagen"
+                  value={formCanine.picture}
+                  onChange={(e) => setFormCanine({ ...formCanine, picture: e.target.value })}
+                />
+                <input
+                  type="text"
+                  placeholder="Raza"
+                  value={formCanine.race}
+                  onChange={(e) => setFormCanine({ ...formCanine, race: e.target.value })}
+                />
+                <input
+                  type="text"
+                  placeholder="Pedigree"
+                  value={formCanine.pedigree}
+                  onChange={(e) => setFormCanine({ ...formCanine, pedigree: e.target.value })}
+                />
+                <input
+                  type="text"
+                  placeholder="Género"
+                  value={formCanine.gender}
+                  onChange={(e) => setFormCanine({ ...formCanine, gender: e.target.value })}
+                />
+                <input
+                  type="text"
+                  placeholder="Color"
+                  value={formCanine.color}
+                  onChange={(e) => setFormCanine({ ...formCanine, color: e.target.value })}
+                />
+                <label>
+                  Vacunas
+                  <input
+                    type="checkbox"
+                    checked={formCanine.vaccines}
+                    onChange={(e) => setFormCanine({ ...formCanine, vaccines: e.target.checked })}
+                  />
+                </label>
+                <input
+                  type="text"
+                  placeholder="Precio"
+                  value={formCanine.price}
+                  onChange={(e) => setFormCanine({ ...formCanine, price: e.target.value })}
+                />
               </>
             )}
-            {modalType === 'delete' && <p>¿Seguro que quieres eliminar a {selectedCanine?.name}?</p>}
+            {modalType === 'delete' && <p>¿Seguro que quieres eliminar?</p>}
             <button onClick={modalType === 'add' ? handleAddCanine : modalType === 'update' ? handleUpdateCanine : handleDeleteCanine} className="btn-add">
               Confirmar
             </button>
