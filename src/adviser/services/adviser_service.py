@@ -139,7 +139,7 @@ def canine_delete(request):
         return JsonResponse(data={'error': str(e)}, status=500)
 
 
-@api_view
+@api_view(['POST'])
 def update_canine(request):
     try:
         data = request.data
@@ -150,9 +150,11 @@ def update_canine(request):
         can_to_search = adviser_pers.get_a_can(id)
 
         if can_to_search is not None:
+            id = data.get('id')
             age = data.get('age')
             price = data.get('price')
             can_to_update = adviser_pers.update_can(
+                id=id,
                 age=age,
                 price=price,
             )
