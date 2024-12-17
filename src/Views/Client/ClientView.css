@@ -1,4 +1,4 @@
-root {
+.root {
   background-color: #e8caaa;
 }
 
@@ -54,9 +54,8 @@ root {
 
 .client-container #catalog {
   margin-top: 120px;
-  width: 100vw; 
-  padding-top: 66rem;
-  background-color: #e8caaa; 
+  width: 100%;
+  background-color: #e8caaa;
 }
 
 .client-container #catalog h2 {
@@ -72,14 +71,15 @@ root {
   border-radius: 10px;
   overflow: hidden;
   transition: transform 0.2s, box-shadow 0.2s;
-}
-
-.client-container .card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 20px;
 }
 
 .client-container .card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
   border-radius: 5px 5px 0 0;
 }
 
@@ -89,16 +89,7 @@ root {
   border-top: none;
   border-radius: 0 0 10px 10px;
   padding: 15px;
-}
-
-.client-container .card-title {
-  font-weight: bold;
-  color: #bf592b;
-  margin-bottom: 10px;
-}
-
-.client-container .card-text {
-  color: #555;
+  height: 150px;
 }
 
 .client-container .card-buttons {
@@ -172,6 +163,20 @@ root {
   background-color: #ddd;
   color: #666;
   cursor: not-allowed;
+}
+
+.client-container .row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
+}
+
+.client-container .col-md-4 {
+  max-width: 300px;
+  flex: 1;
+  display: flex;
+  justify-content: center;
 }
 
 .icon-style {
