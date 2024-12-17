@@ -3,6 +3,7 @@ import { useLocation } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "./ClientView.css";
+import { getUserById, logoutUser } from '../services/authRoutes';
 
 interface Canine {
   id: number;
@@ -24,8 +25,6 @@ const mockCanines: Canine[] = [
 
 const ClientView: React.FC = () => {
   const location = useLocation();
-  const { username, email, phone, address } = location.state || {};
-
   const [showInfo, setShowInfo] = useState(false);
   const [showCatalog, setShowCatalog] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
@@ -36,7 +35,52 @@ const ClientView: React.FC = () => {
   const [contentMarginTop, setContentMarginTop] = useState(0);
 
   const itemsPerPage = 4;
+  const [userData, setUserData] = useState({
+    username: '',
+    email: '',
+    phone: '',
+    address: '',
+  });
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+        console.log("User Session:", session);
+        const response = await getUserById(session.user.id);
+        console.log('User', response);
+        if (response.status === 'ok') {
+          setUserData(response.user); 
+        } else {
+          console.error('Error to obtain user data');
+        }
+      } catch (error) {
+        console.error('Error fetching user data:', error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+  
+  const handleLogout = async () => {
+    try {
+      const result = await logoutUser();
+      if (result.status === 'ok') {
+        alert('Sesión cerrada exitosamente.');
+        sessionStorage.clear(); // Limpia la sesión en el frontend
+        window.location.href = '/login'; // Redirige al usuario a la página de login
+        alert('Session closed.');
+        sessionStorage.clear(); 
+        window.location.href = '/Durazno-Project/login'; 
+      } else {
+        alert('Error al cerrar sesión: ' + result.message);
+        alert('Logout failed: ' + result.message);
+      }
+    } catch (error) {
+      console.error('Error al intentar cerrar sesión:', error);
+      console.error('Logout failed:', error);
+    }
+  };
   useEffect(() => {
     const navbar = document.querySelector(".navbar");
     if (navbar) {
@@ -153,7 +197,7 @@ const ClientView: React.FC = () => {
                     </a>
                   </li>
                   <li>
-                    <a className="dropdown-item" href="#">
+                    <a className="dropdown-item" href="#" onClick={handleLogout}>
                       Salir de sesión
                     </a>
                   </li>
@@ -168,16 +212,16 @@ const ClientView: React.FC = () => {
         <div className="info-container" style={{ marginTop: contentMarginTop }}>
           <h2>Información de la Cuenta</h2>
           <p>
-            <strong>Nombre de Usuario:</strong> {username || "No disponible"}
+            <strong>Nombre de Usuario:</strong> {userData.username || "No disponible"}
           </p>
           <p>
-            <strong>Email:</strong> {email || "No disponible"}
+            <strong>Email:</strong> {userData.email || "No disponible"}
           </p>
           <p>
-            <strong>Teléfono:</strong> {phone || "No disponible"}
+            <strong>Teléfono:</strong> {userData.phone || "No disponible"}
           </p>
           <p>
-            <strong>Dirección:</strong> {address || "No disponible"}
+            <strong>Dirección:</strong> {userData.address || "No disponible"}
           </p>
         </div>
       )}
