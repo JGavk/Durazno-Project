@@ -87,8 +87,9 @@ def canine_register(request):
 
         required_fields = ['picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price']
 
-        if not all(data.get(field) for field in required_fields):
-            return JsonResponse(data={'error': 'Missing data'}, status=400)
+        for field in required_fields:
+            if field not in data:
+                return JsonResponse(data={'error': f'Missing field: {field}'}, status=400)
 
         dog_done = adviser_pers.register_canine(
             picture=data.get('picture'),
@@ -132,6 +133,31 @@ def canine_delete(request):
         if deleted_can == "Canine deleted":
             return JsonResponse(data={'message': 'Deleted successfully'}, status=200)
         elif deleted_can == "Canine does not exist":
+            return JsonResponse(data={'error': 'Canine not found'}, status=404)
+
+    except Exception as e:
+        return JsonResponse(data={'error': str(e)}, status=500)
+
+
+@api_view
+def update_canine(request):
+    try:
+        data = request.data
+        id = data.get('id')
+        if not id:
+            return JsonResponse(data={'error': 'Missing data'}, status=400)
+
+        can_to_search = adviser_pers.get_a_can(id)
+
+        if can_to_search is not None:
+            age = data.get('age')
+            price = data.get('price')
+            can_to_update = adviser_pers.update_can(
+                age=age,
+                price=price,
+            )
+            return JsonResponse(data={'message': 'Updated successfully'}, status=200)
+        else:
             return JsonResponse(data={'error': 'Canine not found'}, status=404)
 
     except Exception as e:

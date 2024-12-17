@@ -1,3 +1,5 @@
+from django.core.exceptions import ObjectDoesNotExist
+
 from src.models import Adviser, Canine
 from django.forms.models import model_to_dict
 
@@ -68,7 +70,8 @@ class AdviserPersistence:
     @staticmethod
     def get_all_canines():
         try:
-            all_canines = Canine.objects.values('id', 'picture', 'age', 'race', 'pedigree', 'gender', 'color', 'vaccines', 'price')
+            all_canines = Canine.objects.values('id', 'picture', 'age', 'race', 'pedigree', 'gender', 'color',
+                                                'vaccines', 'price')
             print(all_canines)
             return list(all_canines)
         except Exception as e:
@@ -84,3 +87,30 @@ class AdviserPersistence:
             return "Canine does not exist"
         except Exception as e:
             return str(e)
+
+    @staticmethod
+    def update_can(id, age, price):
+        try:
+            canine = Canine.objects.get(id=id)
+            if age:
+                canine.age = age
+            if price:
+                canine.price = price
+            canine.save()
+            return canine
+        except Canine.DoesNotExist:
+            return "Canine does not exist"
+        except Exception as e:
+            return str(e)
+
+    @staticmethod
+    def get_a_can(id):
+        try:
+            can_to_get = Canine.objects.get(id=id)
+            serialized_can_to_get = model_to_dict(can_to_get)
+            return serialized_can_to_get
+        except ObjectDoesNotExist:
+            return None
+        except Exception as e:
+            return str(e)
+
