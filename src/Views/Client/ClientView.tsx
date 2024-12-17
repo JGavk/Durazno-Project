@@ -82,7 +82,7 @@ const ClientView: React.FC = () => {
       const result = await logoutUser();
       if (result.status === 'ok') {
         sessionStorage.clear(); 
-        window.location.href = '/login'; 
+        window.location.href = '/Durazno-Project/login/'; 
       } else {
         alert('Logout error ' + result.message);
       }
