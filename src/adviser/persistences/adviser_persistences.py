@@ -1,3 +1,5 @@
+import traceback
+
 from django.core.exceptions import ObjectDoesNotExist
 
 from src.models import Adviser, Canine
@@ -61,10 +63,10 @@ class AdviserPersistence:
                 vaccines=vaccines,
                 price=price,
             )
-            print(canine)
             canine.save()
             return canine
         except Exception as e:
+            print(traceback.format_exc())
             return str(e)
 
     @staticmethod

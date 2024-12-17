@@ -102,7 +102,7 @@ def canine_register(request):
             price=data.get('price')
         )
 
-        return JsonResponse(data={'status': 'ok', 'message': 'Register successful'}, status=200)
+        return JsonResponse(data={'status': 'ok', 'message': 'Register successful', 'can': dog_done.id}, status=200)
     except Exception as e:
         return JsonResponse(data={'error': str(e)}, status=500)
 
