@@ -75,7 +75,7 @@ function LoginView() {
         <p className= 'login-text'>
               ¿No tienes cuenta? <a href='/Durazno-Project/register'>Regístrate aquí</a>
               <br />
-              ¿Eres Asesor <a href='adv/login'>Inicia sesión aquí</a>
+              ¿Eres Asesor? <a href='adv/login'>Inicia sesión aquí</a>
         </p>
       </div>
     </div>

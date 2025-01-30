@@ -24,7 +24,7 @@ export const loginUser = async (data: any) => {
     try{
         const responseAPI = await axiosInstance.post('http://localhost:8000/login/', data);
         const userData = responseAPI.data;
-        sessionStorage.setItem('user', JSON.stringify(userData));
+        localStorage.setItem('user', JSON.stringify(userData));
         return userData;
     }catch(error){
         return error;
@@ -36,6 +36,7 @@ export const loginAdviser = async (data: any) => {
     try{
         const responseAPI = await axiosInstance.post('http://localhost:8000/adv/login/', data);
         const userData = responseAPI.data;
+        localStorage.setItem('user', JSON.stringify(userData));
         return userData;
     }catch(error){
         return error;
@@ -64,7 +65,7 @@ export const getCans = async () => {
 
 export const getUserById = async (id: string) => {
     try{
-        const token = JSON.parse(sessionStorage.getItem('user') || '{} ');
+        const token = JSON.parse(localStorage.getItem('user') || '{} ');
         const responseAPI = await axiosInstance.get(`/users/${id}`, {
             headers: {
                 'Authorization': `Bearer ${token.user.session_id}`
@@ -75,6 +76,19 @@ export const getUserById = async (id: string) => {
         return error;
     }
 }
+
+export const updateCanine = async (id: string, age: number, price: number) => {
+    try {
+      const response = await axios.post('http://localhost:8000/uptdog/', {
+        id,
+        age,
+        price,
+      });
+      return response;
+    } catch (error) {
+      throw new Error(`Error updating canine: ${error}`);
+    }
+ };
 
 export const logoutUser = async () => {
     try {
@@ -137,5 +151,14 @@ export const getCanes = async () => {
         return responseAPI.data;
     }catch(error){
         return error;
+    }
+}
+
+export const deleteCan = async () => {
+    try{
+        const responseAPI = await axiosInstance.get('http://localhost:8000/deletdog/')
+        return responseAPI
+    }catch(error){
+        return error
     }
 }

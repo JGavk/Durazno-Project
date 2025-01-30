@@ -32,6 +32,7 @@ const ClientView: React.FC = () => {
   const [canines, setCanines] = useState<Canine[]>([]);
 
   const [userData, setUserData] = useState({
+    id: '',
     username: '',
     email: '',
     phone: '',
@@ -42,7 +43,7 @@ const ClientView: React.FC = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const session = JSON.parse(sessionStorage.getItem('user') || '{}');
+        const session = JSON.parse(localStorage.getItem('user') || '{}');
         console.log("User Session:", session);
         const response = await getUserById(session.user.id);
         console.log('User', response);
@@ -81,7 +82,7 @@ const ClientView: React.FC = () => {
     try {
       const result = await logoutUser();
       if (result.status === 'ok') {
-        sessionStorage.clear(); 
+        localStorage.clear(); 
         window.location.href = '/Durazno-Project/login/'; 
       } else {
         alert('Logout error ' + result.message);
@@ -147,7 +148,7 @@ const ClientView: React.FC = () => {
   };
 
   const handleMoreInfo = (name: string) => {
-    alert(`Más información sobre ${name}.`);
+    alert(`Más información sobre el cachorro.`);
   };
 
   const handleRemoveFromCart = (id: number) => {
@@ -161,7 +162,7 @@ const ClientView: React.FC = () => {
     setCart((prevCart) => [...prevCart, canine]);
     setCanines((prevCanines) => prevCanines.filter((c) => c.id !== canine.id));
     setAdoptedDogs((prevAdopted) => [...prevAdopted, canine.name]);
-    alert(`Has adoptado a ${canine.name}. ¡Felicidades!`);
+    alert(`Has adoptado a un cachorro. ¡Felicidades!`);
   };
   const handleCheckout = () => {
     if (cart.length === 0) {
@@ -175,7 +176,7 @@ const ClientView: React.FC = () => {
       Email: ${userData.email || "No disponible"}
   
       Caninos Adoptados:
-      ${cart.map((dog) => `- ${dog.name} (${dog.race}, ${dog.age} años)`).join("\n")}
+      ${cart.map((dog) => `- Cachorro (${dog.race}, ${dog.age} años)`).join("\n")}
   
       Total: $${cart.reduce((total, dog) => total + dog.price, 0)}
     `;
@@ -263,8 +264,8 @@ const ClientView: React.FC = () => {
           <div>
             <h3>Caninos Adoptados:</h3>
             <ul>
-              {adoptedDogs.map((dog, index) => (
-                <li key={index}>Adoptaste a {dog}</li>
+              {adoptedDogs.map((index) => (
+                <li key={index}>Adoptaste a un canino</li>
               ))}
             </ul>
           </div>

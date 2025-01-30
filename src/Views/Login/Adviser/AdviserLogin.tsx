@@ -44,18 +44,12 @@ const AdviserLogin: React.FC = () => {
                 if (response.message == "Login successful") {
                     navigate('/adviser');
                     console.log("Logged In");
-                    const cookies = document.cookie;
-                    if (cookies.includes('csrftoken')) {
-                        const csrftoken = cookies.split('=')[1];
-                        sessionStorage.setItem('csrftoken', csrftoken );
-                    } else {
-                        console.log('csrftoken cookie not found: ', cookies);
-                    }
                 } else {
-                    console.log("Error Loggin in: ", response);
+                    alert(response.response.data.message || 'Login error');
                 }
             } catch (error) {
-                console.log("Error: ",error);
+                console.error('Login error:', error);
+                alert('Login error, try again.');
             }
         }
     };

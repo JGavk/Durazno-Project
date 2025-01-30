@@ -2,10 +2,9 @@ import { useState } from 'react';
 import './RegisterView.css';
 import { registerUser } from '../services/authRoutes';
 import { useNavigate } from 'react-router-dom';
-import ReCAPTCHA from 'react-google-recaptcha';
+
 
 function SignupView() {
-  const [recaptchaValue, setRecaptchaValue] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     picture: '',
     username: '',
@@ -22,9 +21,6 @@ function SignupView() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleRecaptchaChange = (value: string | null) => {
-    setRecaptchaValue(value);
-  };
 
   const handleSignup = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -34,10 +30,6 @@ function SignupView() {
       return;
     }
 
-    if (!recaptchaValue) {
-      alert('Por favor, completa el CAPTCHA.');
-      return;
-    }
     
     try {
       const response: any = await registerUser({
@@ -47,7 +39,6 @@ function SignupView() {
         password: formData.password,
         phone: formData.phone,
         address: formData.address,
-        recaptchaToken: recaptchaValue,
       });
       console.log(response)
       if (response.status == 200) {
@@ -125,10 +116,7 @@ function SignupView() {
             placeholder="Dirección completa"
             required
           />
-          <ReCAPTCHA
-            sitekey="6Lc-qJ0qAAAAAJzq5T2ZCaMt8YweoHirdhIkC4IX"
-            onChange={handleRecaptchaChange}
-          />
+
           <button type="submit">Registrarse</button>
         </form>
       </div>

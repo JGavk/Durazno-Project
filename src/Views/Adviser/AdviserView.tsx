@@ -45,7 +45,7 @@ const AdviserView: React.FC = () => {
     } catch (error) {
       console.error('Error logging out:', error);
     }
-    navigate('/adv/login');
+    navigate('/');
   };
 
   useEffect(() => {
@@ -53,11 +53,6 @@ const AdviserView: React.FC = () => {
       try {
         const csrftoken = sessionStorage.getItem('csrftoken') || '';
         console.log('csrftoken:', csrftoken);
-
-        if (!csrftoken) {
-          navigate('/adv/login');
-          return;
-        }
 
         const response = await getCanes();
         console.log('response:', response);
