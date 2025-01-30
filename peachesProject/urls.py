@@ -18,6 +18,6 @@ urlpatterns = [
     path('adv/logout/', adviser_logout, name='adviser_logout'),
     path('adv/verify/', verify_session, name='verify_session'),
     path('rtdog/', get_canines, name='get_canines'),
-    path('deletdog/', canine_delete, name='canine_delete'),
+    path('deletdog/${id}/', canine_delete, name='canine_delete'),
     path('uptdog/', update_canine, name='update_doggo'),
 ]

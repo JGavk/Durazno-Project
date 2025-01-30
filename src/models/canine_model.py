@@ -10,7 +10,7 @@ class Canine(models.Model):
     gender = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
     vaccines = models.BooleanField(default=False)
-    price = models.DecimalField(max_digits=10, decimal_places=5, default=0)
+    price = models.DecimalField(max_digits=10, decimal_places=1, default=0)
 
     class Meta:
         db_table = 'canine'

@@ -33,7 +33,7 @@ def adviser_login(request):
 
         request.session['user_id'] = adviser.id
         adviser.last_login = timezone.now()
-        adviser.save()
+        #adviser.save()
 
         response = JsonResponse(data={
             "message": "Login successful",
@@ -126,7 +126,7 @@ def canine_delete(request):
         id = data.get('id')
 
         if not id:
-            return JsonResponse(data={'error': 'Missing data'}, status=400)
+            return JsonResponse(data={'error': 'Missing id'}, status=400)
 
         deleted_can = adviser_pers.delete_canine(id)
 
@@ -134,6 +134,8 @@ def canine_delete(request):
             return JsonResponse(data={'message': 'Deleted successfully'}, status=200)
         elif deleted_can == "Canine does not exist":
             return JsonResponse(data={'error': 'Canine not found'}, status=404)
+        else:
+            return JsonResponse(data={'error': 'Unknown error occurred'}, status=500)
 
     except Exception as e:
         return JsonResponse(data={'error': str(e)}, status=500)
