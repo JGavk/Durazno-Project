@@ -11,18 +11,6 @@ from django.utils import timezone
 user_persistence = UserPersistence()
 
 
-#def validate_recaptcha(recaptcha_token):
-#    secret_key = '6LcIFMcqAAAAAF694sRaL-x1aQwyE8GGXvXT8ifc'
-#    url = 'https://www.google.com/recaptcha/api/siteverify'
-#    data = {
-#        'secret': secret_key,
-#        'response': recaptcha_token,
-#    }
-#    response = requests.post(url, data=data)
-#    result = response.json()
-#    return result.get('success', False)
-
-
 @api_view(['POST'])
 def user_register(request):
     try:
@@ -33,13 +21,9 @@ def user_register(request):
         phone = data.get('phone')
         address = data.get('address')
         password = data.get('password')
-        recaptcha_token = data.get('recaptchaToken')
 
         if not email or not password:
             return JsonResponse({'error': 'Email and password are required.'}, status=400)
-
-        #if not validate_recaptcha(recaptcha_token):
-        #   return JsonResponse({'error': 'Captcha inválido o no verificado.'}, status=400)
 
         exists = user_persistence.search_user(email)
         if exists:
