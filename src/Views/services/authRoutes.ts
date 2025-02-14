@@ -43,6 +43,19 @@ export const loginAdviser = async (data: any) => {
     }
 
 }
+export const getAdviserById = async (id: string) => {
+    try{
+        const token = JSON.parse(localStorage.getitem('adviser') || '{}')
+        const responseAPI = await axiosInstance.get(`/adviser/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${token.adviser.session_id}`
+            }
+        });
+        return responseAPI.data
+    }catch(error){
+        return error;
+    }
+}
 
 export const getUsers = async () => {
     try{
