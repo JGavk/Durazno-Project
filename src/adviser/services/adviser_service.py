@@ -23,6 +23,7 @@ def adviser_login(request):
         data = request.data
         email = data.get('email')
         password = data.get('password')
+
         if not email or not password:
             return JsonResponse(data={'error': 'Missing email or password'}, status=400)
 
@@ -31,36 +32,38 @@ def adviser_login(request):
         if not adviser or not check_password(password, adviser.password):
             return JsonResponse({"error": "Invalid credentials"}, status=401)
 
-        request.session['user_id'] = adviser.id
-        adviser.last_login = timezone.now()
-        #adviser.save()
+        adviser = adviser_pers.login_adviser(email, password)
 
-        response = JsonResponse(data={
-            "message": "Login successful",
-            "advisor_id": adviser.id,
-            "advisor_name": adviser.name,
-            "email": adviser.email
-        }, status=200)
+        if adviser:
+            login(request, adviser)
+            request.session['advisor_id'] = adviser.id
+            adviser.last_login = timezone.now()
+            response = JsonResponse(data={
+                "message": "Login successful",
+                "advisor_id": adviser.id,
+                "advisor_name": adviser.name,
+                "email": adviser.email
+            }, status=200)
 
-        response.set_cookie(
-            key='sessionid',
-            value=request.session.session_key,
-            httponly=True,
-            samesite='Lax'
-        )
-        return response
+            response.set_cookie(
+                key='sessionid',
+                value=request.session.session_key,
+                httponly=True,
+                samesite='Lax'
+            )
+            return response
+        else:
+            return JsonResponse({"error": "Invalid credentials"}, status=401)
     except ValidationError as e:
         return JsonResponse({'error': str(e)}, status=400)
-    except Exception as e:
-        return JsonResponse({'error': 'An unexpected error occurred'}, status=500)
 
 
 @api_view(['GET'])
 def verify_session(request):
-    user_id = request.session.get('user_id')
+    advisor_id = request.session.get('advisor_id')
 
-    if user_id:
-        return JsonResponse({"message": "Active session", "advisor_id": user_id}, status=200)
+    if advisor_id:
+        return JsonResponse({"message": "Active session", "advisor_id": advisor_id}, status=200)
     return JsonResponse({"error": "non session"}, status=401)
 
 
@@ -77,6 +80,16 @@ def adviser_logout(request):
     except Exception as e:
         print(f"Error during logout: {str(e)}")
         return JsonResponse({"error": "An unexpected error occurred"}, status=500)
+
+
+@permission_classes([IsAuthenticated])
+@api_view(['GET'])
+def get_adv_by_id(request, id):
+    try:
+        adviser = Adviser.objects.get(id)
+        return JsonResponse({'status': 'ok', 'user': adviser}, status=200)
+    except Exception as error:
+        return JsonResponse({'status': 'fail', 'message': str(error)}, status=500)
 
 
 @permission_classes([IsAuthenticated])
